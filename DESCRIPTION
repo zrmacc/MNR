@@ -1,0 +1,21 @@
+Package: MNR
+Title: Multivariate Normal Regression
+Version: 0.0.1
+Authors@R: person("Zachary", "McCaw", email = "zmccaw@g.harvard.edu", role = c("aut", "cre"))
+Description: Fits regression models in which the response vector for each subject follows a multivariate normal distribution. The first component of the response vector is taken as the outcome of primary interest. Separate regression models for the primary and secondary outcomes are permitted. Hypothesis tests for the effect of covariates on the outcome of primary interest are provided. 
+Depends: R (>= 3.4.2)
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+LinkingTo:
+	Rcpp,
+	RcppEigen
+Imports:
+	methods, 
+	Rcpp,
+	RcppEigen,
+	stats
+RoxygenNote: 6.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

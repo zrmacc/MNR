@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Zachary McCaw" />
+
+<meta name="date" content="2018-03-14" />
+
+<title>Multivariate Normal Regression</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Multivariate Normal Regression</h1>
+<h4 class="author"><em>Zachary McCaw</em></h4>
+<h4 class="date"><em>2018-03-14</em></h4>
+
+
+
+<div id="contents" class="section level1">
+<h1>Contents</h1>
+<ul>
+<li><a href="#setting">Setting</a></li>
+<li><a href="#example-data">Example Data</a></li>
+<li><a href="#bivariate-outcome-regression">Bivariate Outcome Regression</a></li>
+<li><a href="#multivariate-outcome-regression">Multivariate Outcome Regression</a></li>
+</ul>
+</div>
+<div id="setting" class="section level1">
+<h1>Setting</h1>
+<p>Suppose that a continuous response vector <span class="math inline">\(y_{i}\in\mathbb{R}^{k}\)</span> is observed for each of <span class="math inline">\(n\)</span> subjects. Partition the response vector as <span class="math inline">\(y_{i} = (t_{i},s_{i})\)</span>, where <span class="math inline">\(t_{i}\in\mathbb{R}^{1}\)</span> is the outcome of primary interest, or <em>target</em> outcome, and <span class="math inline">\(s_{i}\in\mathbb{R}^{k-1}\)</span> is an outcome of secondary interest. For example, <span class="math inline">\(t_{i}\)</span> may denote a gold-standard measurement, and <span class="math inline">\(s_{i}\)</span> a collection of <em>surrogate</em> measurements. In addition, for each subject, a matrix <span class="math inline">\(Z_{i}\)</span> of covariates is observed. Conditional on covariates, the response vector is taken to follow a multivariate normal distribution:</p>
+<p><span class="math display">\[
+y_{i}|Z_{i} \sim N \binom{\mu_{T,i}}{\mu_{S,i}}, \left(
+\begin{array}{c c}
+\Sigma_{TT} &amp; \Sigma_{TS} \\
+\Sigma_{ST} &amp; \Sigma_{SS}
+\end{array}
+\right)
+\]</span></p>
+<p>Let <span class="math inline">\(x_{T,i}\)</span> denote a <span class="math inline">\(p \times 1\)</span> vector of covariates relevant to the target outcome <span class="math inline">\(t_{i}\)</span>, and <span class="math inline">\(X_{S,i}\)</span> a <span class="math inline">\((k-1) \times q\)</span> matrix of covariates relevant to the secondary outcome <span class="math inline">\(s_{i}\)</span>. Specify regression models for the target and secondary means as:</p>
+<p><span class="math display">\[
+\binom{\mu_{T,i}}{\mu_{S,i}} = \left(
+\begin{array}{c c}
+x_{T,i}' &amp; 0 \\
+0 &amp; X_{S,i}
+\end{array}
+\right)
+\binom{\beta}{\alpha}
+\]</span></p>
+<p>Finally, partition the regression coefficient for the target mean as <span class="math inline">\(\beta = (\beta_{1},\beta_{2})\)</span>. Suppose interest lies in testing the null hypothesis that a subset of the target regression coefficients agree with a pre-specified value, i.e. <span class="math inline">\(H_{0}:\beta_{1} = \beta_{10}\)</span>. Score tests for evaluating this hypothesis are provided in the case of a single and of multiple secondary outcomes.</p>
+</div>
+<div id="example-data" class="section level1">
+<h1>Example Data</h1>
+<p>The list <code>D.bvr</code> contains a simulated data set for <span class="math inline">\(n=1000\)</span> subjects with bivariate normal outcomes. The target and surrogate outcomes have unit variances and correlation <span class="math inline">\(\rho=0.5\)</span>. Each outcome depends on a design matrix containing three independent standard normal covariates. <code>Beta</code> contains the regression coefficients used to generate the subject-specific target mean <span class="math inline">\(\mu_{T,i}\)</span> from the target design matrix <code>D.t</code>. Likewise, <code>Alpha</code> contains the regression coefficients used to generate the subject-specific surrogate mean <span class="math inline">\(\mu_{S,i}\)</span> from the surrogate design matrix <code>D.s</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MNR);
+<span class="co"># Target mean</span>
+y.t =<span class="st"> </span>D.bvr$y.t;
+<span class="co"># Surrogate mean</span>
+y.s =<span class="st"> </span>D.bvr$y.s;
+<span class="co"># Target design</span>
+D.t =<span class="st"> </span>D.bvr$D.t;
+<span class="co"># Surrogate design</span>
+D.s =<span class="st"> </span>D.bvr$D.s;
+<span class="co"># Beta</span>
+<span class="kw">print</span>(D.bvr$Beta);
+<span class="co"># Alpha</span>
+<span class="kw">print</span>(D.bvr$Alpha);</code></pre></div>
+<pre><code>##   b0   b1   b2   b3 
+## -1.0  0.1  0.1  0.0 
+##   a0   a1   a2   a3 
+##  1.0 -0.1 -0.1 -0.1</code></pre>
+</div>
+<div id="bivariate-outcome-regression" class="section level1">
+<h1>Bivariate Outcome Regression</h1>
+<p>The case of a single secondary outcome is implemented separately from the case of multiple secondary outcomes because the fitting procedure is simplified, and thereby faster, in the former. The following demonstrates various score tests possible using the example data. The first is an overall test of <span class="math inline">\(H_{0}:\beta_{1}=\beta_{2}=\beta_{3}=0\)</span>, which is false. The second assesses whether <span class="math inline">\(H_{0}:\beta_{1}=\beta_{2}=0\)</span> holds, which is again false, treating <span class="math inline">\(\beta_{3}\)</span> as a nuisance. The third considers <span class="math inline">\(H_{0}:\beta_{1}=0.1\)</span>, which is in fact true, while treating <span class="math inline">\(\beta_{2}\)</span> and <span class="math inline">\(\beta_{3}\)</span> as nuisances. The final considers <span class="math inline">\(H_{0}:\beta_{3}=0\)</span>, which is again true, treating <span class="math inline">\(\beta_{1}\)</span> and <span class="math inline">\(\beta_{2}\)</span> as nuisances</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cat</span>(<span class="st">&quot;Joint score test of b1 = b2 = b3 = 0&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
+<span class="kw">signif</span>(<span class="kw">Score.bnr</span>(y.t,y.s,D.t,D.s,<span class="dt">L=</span><span class="kw">c</span>(T,T,T)),<span class="dt">digits=</span><span class="dv">2</span>);
+<span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,<span class="st">&quot;Joint score test of b1 = b2 = 0, treating b3 as a nuisance&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
+<span class="kw">signif</span>(<span class="kw">Score.bnr</span>(y.t,y.s,D.t,D.s,<span class="dt">L=</span><span class="kw">c</span>(T,T,F)),<span class="dt">digits=</span><span class="dv">2</span>);
+<span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,<span class="st">&quot;Joint score test of b1 = 0.1, treating b2 and b3 as nuisances&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
+<span class="kw">signif</span>(<span class="kw">Score.bnr</span>(y.t,y.s,D.t,D.s,<span class="dt">L=</span><span class="kw">c</span>(T,F,F),<span class="dt">b0=</span><span class="kw">c</span>(<span class="fl">0.1</span>)),<span class="dt">digits=</span><span class="dv">2</span>);
+<span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,<span class="st">&quot;Individual score test of b3 = 0, treating b1 and b2 as nuisances&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
+<span class="kw">signif</span>(<span class="kw">Score.bnr</span>(y.t,y.s,D.t,D.s,<span class="dt">L=</span><span class="kw">c</span>(F,F,T)),<span class="dt">digits=</span><span class="dv">2</span>);</code></pre></div>
+<pre><code>## Joint score test of b1 = b2 = b3 = 0 
+##   Score      df       p 
+## 2.7e+01 3.0e+00 6.6e-06 
+## 
+##  Joint score test of b1 = b2 = 0, treating b3 as a nuisance 
+##   Score      df       p 
+## 2.7e+01 2.0e+00 1.6e-06 
+## 
+##  Joint score test of b1 = 0.1, treating b2 and b3 as nuisances 
+## Score    df     p 
+##  0.58  1.00  0.45 
+## 
+##  Individual score test of b3 = 0, treating b1 and b2 as nuisances 
+##  Score     df      p 
+## 0.0031 1.0000 0.9600</code></pre>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
