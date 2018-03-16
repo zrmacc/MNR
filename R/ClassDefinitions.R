@@ -4,10 +4,10 @@
 #' @slot Covariance Outcome covariance matrix.
 #' @slot Information Information.
 #' @slot Residuals Phenotypic residuals.
-#' @name mvr-class
-#' @rdname mvr-class
-#' @exportClass mvr
-setClass(Class="mvr",representation=representation(Coefficients="list",Covariance="matrix",Information="list",Residuals="list"));
+#' @name mnr-class
+#' @rdname mnr-class
+#' @exportClass mnr
+setClass(Class="mnr",representation=representation(Coefficients="list",Covariance="matrix",Information="list",Residuals="list"));
 
 ########################
 # Print Method
@@ -15,11 +15,11 @@ setClass(Class="mvr",representation=representation(Coefficients="list",Covarianc
 
 #' Print for Multivariate Regression Model
 #'
-#' @param x A \code{mvr} object.
+#' @param x A \code{mnr} object.
 #' @param ... Unused.
 #' @export
 
-print.mvr = function(x,...){
+print.mnr = function(x,...){
   cat("Target Outcome Regression Coefficients:\n");
   print(signif(x@Coefficients$Beta,digits=3));
   cat("\n");
@@ -32,10 +32,10 @@ print.mvr = function(x,...){
 ########################
 
 #' Show for Multivariate Regression Model
-#' @param object A \code{mvr} object.
-#' @rdname mvr-method
+#' @param object A \code{mnr} object.
+#' @rdname mnr-method
 #' @importFrom methods show
-setMethod(f="show",signature=c(object="mvr"),definition=function(object){print.mvr(x=object)});
+setMethod(f="show",signature=c(object="mnr"),definition=function(object){print.mnr(x=object)});
 
 ########################
 # Coef Method
@@ -54,12 +54,12 @@ toProper = function(s){
 
 #' Extract Coefficients from Multivariate Regression Model
 #'
-#' @param object A \code{mvr} object.
+#' @param object A \code{mnr} object.
 #' @param ... Unused.
 #' @param type Either Alpha or Beta.
 #' @export
 
-coef.mvr = function(object,...,type="Beta"){
+coef.mnr = function(object,...,type="Beta"){
   # Ensure proper case
   type = toProper(type);
   if(! type %in% c("Alpha","Beta")){stop("Select Alpha or Beta.")};
@@ -76,12 +76,12 @@ coef.mvr = function(object,...,type="Beta"){
 
 #' Extract Residuals from Multivariate Regression Model
 #'
-#' @param object A \code{mvr} object.
+#' @param object A \code{mnr} object.
 #' @param ... Unused.
 #' @param type Either Surrogate or Target.
 #' @export
 
-residuals.mvr = function(object,...,type="Target"){
+residuals.mnr = function(object,...,type="Target"){
   # Ensure first letter is capitalized
   type = toProper(type);
   if(! type %in% c("Surrogate","Target")){stop("Select Surrogate or Target.")};
@@ -101,13 +101,13 @@ residuals.mvr = function(object,...,type="Target"){
 #' Returns the either the estimated covariance matrix of the outcome,
 #' or the information matrix of the regression coefficients. 
 #' 
-#' @param object A \code{mvr} object.
+#' @param object A \code{mnr} object.
 #' @param ... Unused.
 #' @param type Either Outcome or Regression. Default is Regression.  
 #' @param inv Invert information matrix? Default is TRUE.
 #' @export
 
-vcov.mvr = function(object,...,type="Regression",inv=T){
+vcov.mnr = function(object,...,type="Regression",inv=T){
   # Ensure proper case
   type = toProper(type);
   if(! type %in% c("Regression","Outcome")){stop("Select Regression or Outcome.")};

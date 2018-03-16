@@ -3,6 +3,8 @@
 
 //' Fast Matrix Transpose
 //'
+//' Constructs \eqn{A'} from \eqn{A}.
+//'
 //' @param A Numeric matrix.
 //' @export
 // [[Rcpp::export]]
@@ -13,6 +15,7 @@ SEXP fastT(const Eigen::Map<Eigen::MatrixXd> A){
 
 //' Fast Matrix Inner Product
 //'
+//' Calculates \eqn{A'B}.
 //'
 //' @param A Numeric matrix.
 //' @param B Numeric matrix.
@@ -35,6 +38,8 @@ SEXP fastInv(const Eigen::Map<Eigen::MatrixXd> A){
 
 //' Fast Matrix Determinant
 //'
+//' Calculates \eqn{\det(A)}.
+//'
 //' @param A Numeric matrix.
 //' @export
 // [[Rcpp::export]]
@@ -44,6 +49,8 @@ SEXP fastDet(const Eigen::Map<Eigen::MatrixXd> A){
 }
 
 //' Fast Quadratic Form
+//' 
+//' Calculates \eqn{x'Ax}.
 //' 
 //' @param x Numeric vector.
 //' @param A Numeric matrix.

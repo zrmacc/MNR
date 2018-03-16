@@ -10,5 +10,5 @@ fastT(A)
 \item{A}{Numeric matrix.}
 }
 \description{
-Fast Matrix Transpose
+Constructs \eqn{A'} from \eqn{A}.
 }

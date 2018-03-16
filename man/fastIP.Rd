@@ -12,5 +12,5 @@ fastIP(A, B)
 \item{B}{Numeric matrix.}
 }
 \description{
-Fast Matrix Inner Product
+Calculates \eqn{A'B}.
 }

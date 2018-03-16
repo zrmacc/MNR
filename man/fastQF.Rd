@@ -12,5 +12,5 @@ fastQF(x, A)
 \item{A}{Numeric matrix.}
 }
 \description{
-Fast Quadratic Form
+Calculates \eqn{x'Ax}.
 }

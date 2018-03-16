@@ -10,5 +10,5 @@ fastDet(A)
 \item{A}{Numeric matrix.}
 }
 \description{
-Fast Matrix Determinant
+Calculates \eqn{\det(A)}.
 }

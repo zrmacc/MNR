@@ -12,7 +12,7 @@
 
 <meta name="author" content="Zachary McCaw" />
 
-<meta name="date" content="2018-03-14" />
+<meta name="date" content="2018-03-15" />
 
 <title>Multivariate Normal Regression</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Multivariate Normal Regression</h1>
 <h4 class="author"><em>Zachary McCaw</em></h4>
-<h4 class="date"><em>2018-03-14</em></h4>
+<h4 class="date"><em>2018-03-15</em></h4>
 
 
 
@@ -108,36 +108,60 @@ x_{T,i}' &amp; 0 \\
 </div>
 <div id="example-data" class="section level1">
 <h1>Example Data</h1>
-<p>The list <code>D.bvr</code> contains a simulated data set for <span class="math inline">\(n=1000\)</span> subjects with bivariate normal outcomes. The target and surrogate outcomes have unit variances and correlation <span class="math inline">\(\rho=0.5\)</span>. Each outcome depends on a design matrix containing three independent standard normal covariates. <code>Beta</code> contains the regression coefficients used to generate the subject-specific target mean <span class="math inline">\(\mu_{T,i}\)</span> from the target design matrix <code>D.t</code>. Likewise, <code>Alpha</code> contains the regression coefficients used to generate the subject-specific surrogate mean <span class="math inline">\(\mu_{S,i}\)</span> from the surrogate design matrix <code>D.s</code>.</p>
+<div id="bivariate-outcome" class="section level2">
+<h2>Bivariate Outcome</h2>
+<p>The list <code>D.bnr</code> contains a simulated data set for <span class="math inline">\(n=1000\)</span> subjects with bivariate normal outcomes. The target and surrogate outcomes have unit variances and correlation <span class="math inline">\(\rho=0.5\)</span>. Each outcome depends on a design matrix containing three independent standard normal covariates. <code>Beta</code> contains the regression coefficients used to generate the subject-specific target mean <span class="math inline">\(\mu_{T,i}\)</span> from the target design matrix <code>D.t</code>. Likewise, <code>Alpha</code> contains the regression coefficients used to generate the subject-specific surrogate mean <span class="math inline">\(\mu_{S,i}\)</span> from the surrogate design matrix <code>D.s</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MNR);
-<span class="co"># Target mean</span>
-y.t =<span class="st"> </span>D.bvr$y.t;
-<span class="co"># Surrogate mean</span>
-y.s =<span class="st"> </span>D.bvr$y.s;
+<span class="co"># Target outcome</span>
+y.b.t =<span class="st"> </span>D.bnr$y.t;
+<span class="co"># Surrogate outcome</span>
+y.b.s =<span class="st"> </span>D.bnr$y.s;
 <span class="co"># Target design</span>
-D.t =<span class="st"> </span>D.bvr$D.t;
+D.b.t =<span class="st"> </span>D.bnr$D.t;
 <span class="co"># Surrogate design</span>
-D.s =<span class="st"> </span>D.bvr$D.s;
+D.b.s =<span class="st"> </span>D.bnr$D.s;
 <span class="co"># Beta</span>
-<span class="kw">print</span>(D.bvr$Beta);
+<span class="kw">print</span>(D.bnr$Beta);
 <span class="co"># Alpha</span>
-<span class="kw">print</span>(D.bvr$Alpha);</code></pre></div>
+<span class="kw">print</span>(D.bnr$Alpha);</code></pre></div>
 <pre><code>##   b0   b1   b2   b3 
 ## -1.0  0.1  0.1  0.0 
 ##   a0   a1   a2   a3 
 ##  1.0 -0.1 -0.1 -0.1</code></pre>
 </div>
+<div id="trivariate-outcome" class="section level2">
+<h2>Trivariate Outcome</h2>
+<p>The list <code>D.mnr</code> contains a simulated data set for <span class="math inline">\(n=1000\)</span> subjects with trivariate normal outcomes. The target and surrogate outcomes have unit variances, and an exchangeable correlation structure, with <span class="math inline">\(\rho=0.5\)</span>. Each outcome depends on a design matrix containing three independent standard normal covariates. <code>Beta</code> contains the regression coefficients used to generate the subject-specific target mean <span class="math inline">\(\mu_{T,i}\)</span> from the target design matrix <code>D.t</code>. Likewise, <code>Alpha</code> contains the regression coefficients used to generate the subject-specific surrogate means <span class="math inline">\(\mu_{S,i}\)</span> from the surrogate design matrices. Note that, in the case of multiple surrogates, <code>D.s</code> is a <em>list</em> of design matrices, with one matrix per subject. As currently implemented, the same mean model is adopted for each surrogate outcome.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MNR);
+<span class="co"># Target outcome</span>
+y.m.t =<span class="st"> </span>D.mnr$y.t;
+<span class="co"># Surrogate outcome</span>
+y.m.s =<span class="st"> </span>D.mnr$y.s;
+<span class="co"># Target design</span>
+D.m.t =<span class="st"> </span>D.mnr$D.t;
+<span class="co"># Surrogate design</span>
+D.m.s =<span class="st"> </span>D.mnr$D.s;
+<span class="co"># Beta</span>
+<span class="kw">print</span>(D.mnr$Beta);
+<span class="co"># Alpha</span>
+<span class="kw">print</span>(D.mnr$Alpha);</code></pre></div>
+<pre><code>##   b0   b1   b2   b3 
+## -1.0  0.1  0.1  0.0 
+##   a0   a1   a2   a3 
+##  1.0 -0.1 -0.1 -0.1</code></pre>
+</div>
+</div>
 <div id="bivariate-outcome-regression" class="section level1">
 <h1>Bivariate Outcome Regression</h1>
 <p>The case of a single secondary outcome is implemented separately from the case of multiple secondary outcomes because the fitting procedure is simplified, and thereby faster, in the former. The following demonstrates various score tests possible using the example data. The first is an overall test of <span class="math inline">\(H_{0}:\beta_{1}=\beta_{2}=\beta_{3}=0\)</span>, which is false. The second assesses whether <span class="math inline">\(H_{0}:\beta_{1}=\beta_{2}=0\)</span> holds, which is again false, treating <span class="math inline">\(\beta_{3}\)</span> as a nuisance. The third considers <span class="math inline">\(H_{0}:\beta_{1}=0.1\)</span>, which is in fact true, while treating <span class="math inline">\(\beta_{2}\)</span> and <span class="math inline">\(\beta_{3}\)</span> as nuisances. The final considers <span class="math inline">\(H_{0}:\beta_{3}=0\)</span>, which is again true, treating <span class="math inline">\(\beta_{1}\)</span> and <span class="math inline">\(\beta_{2}\)</span> as nuisances</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cat</span>(<span class="st">&quot;Joint score test of b1 = b2 = b3 = 0&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
-<span class="kw">signif</span>(<span class="kw">Score.bnr</span>(y.t,y.s,D.t,D.s,<span class="dt">L=</span><span class="kw">c</span>(T,T,T)),<span class="dt">digits=</span><span class="dv">2</span>);
+<span class="kw">signif</span>(<span class="kw">Score.bnr</span>(y.b.t,y.b.s,D.b.t,D.b.s,<span class="dt">L=</span><span class="kw">c</span>(T,T,T)),<span class="dt">digits=</span><span class="dv">2</span>);
 <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,<span class="st">&quot;Joint score test of b1 = b2 = 0, treating b3 as a nuisance&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
-<span class="kw">signif</span>(<span class="kw">Score.bnr</span>(y.t,y.s,D.t,D.s,<span class="dt">L=</span><span class="kw">c</span>(T,T,F)),<span class="dt">digits=</span><span class="dv">2</span>);
+<span class="kw">signif</span>(<span class="kw">Score.bnr</span>(y.b.t,y.b.s,D.b.t,D.b.s,<span class="dt">L=</span><span class="kw">c</span>(T,T,F)),<span class="dt">digits=</span><span class="dv">2</span>);
 <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,<span class="st">&quot;Joint score test of b1 = 0.1, treating b2 and b3 as nuisances&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
-<span class="kw">signif</span>(<span class="kw">Score.bnr</span>(y.t,y.s,D.t,D.s,<span class="dt">L=</span><span class="kw">c</span>(T,F,F),<span class="dt">b0=</span><span class="kw">c</span>(<span class="fl">0.1</span>)),<span class="dt">digits=</span><span class="dv">2</span>);
+<span class="kw">signif</span>(<span class="kw">Score.bnr</span>(y.b.t,y.b.s,D.b.t,D.b.s,<span class="dt">L=</span><span class="kw">c</span>(T,F,F),<span class="dt">b0=</span><span class="kw">c</span>(<span class="fl">0.1</span>)),<span class="dt">digits=</span><span class="dv">2</span>);
 <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,<span class="st">&quot;Individual score test of b3 = 0, treating b1 and b2 as nuisances&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
-<span class="kw">signif</span>(<span class="kw">Score.bnr</span>(y.t,y.s,D.t,D.s,<span class="dt">L=</span><span class="kw">c</span>(F,F,T)),<span class="dt">digits=</span><span class="dv">2</span>);</code></pre></div>
+<span class="kw">signif</span>(<span class="kw">Score.bnr</span>(y.b.t,y.b.s,D.b.t,D.b.s,<span class="dt">L=</span><span class="kw">c</span>(F,F,T)),<span class="dt">digits=</span><span class="dv">2</span>);</code></pre></div>
 <pre><code>## Joint score test of b1 = b2 = b3 = 0 
 ##   Score      df       p 
 ## 2.7e+01 3.0e+00 6.6e-06 
@@ -153,6 +177,33 @@ D.s =<span class="st"> </span>D.bvr$D.s;
 ##  Individual score test of b3 = 0, treating b1 and b2 as nuisances 
 ##  Score     df      p 
 ## 0.0031 1.0000 0.9600</code></pre>
+</div>
+<div id="trivariate-outcome-regression" class="section level1">
+<h1>Trivariate Outcome Regression</h1>
+<p>Hypothesis testing for two or more surrogate outcomes is analogous to the bivariate case. The same hypothesis tests considered above are repeated for the trivariate outcome model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cat</span>(<span class="st">&quot;Joint score test of b1 = b2 = b3 = 0&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
+<span class="kw">signif</span>(<span class="kw">Score.mnr</span>(y.m.t,y.m.s,D.m.t,D.m.s,<span class="dt">L=</span><span class="kw">c</span>(T,T,T)),<span class="dt">digits=</span><span class="dv">2</span>);
+<span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,<span class="st">&quot;Joint score test of b1 = b2 = 0, treating b3 as a nuisance&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
+<span class="kw">signif</span>(<span class="kw">Score.mnr</span>(y.m.t,y.m.s,D.m.t,D.m.s,<span class="dt">L=</span><span class="kw">c</span>(T,T,F)),<span class="dt">digits=</span><span class="dv">2</span>);
+<span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,<span class="st">&quot;Joint score test of b1 = 0.1, treating b2 and b3 as nuisances&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
+<span class="kw">signif</span>(<span class="kw">Score.mnr</span>(y.m.t,y.m.s,D.m.t,D.m.s,<span class="dt">L=</span><span class="kw">c</span>(T,F,F),<span class="dt">b0=</span><span class="kw">c</span>(<span class="fl">0.1</span>)),<span class="dt">digits=</span><span class="dv">2</span>);
+<span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,<span class="st">&quot;Individual score test of b3 = 0, treating b1 and b2 as nuisances&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
+<span class="kw">signif</span>(<span class="kw">Score.mnr</span>(y.m.t,y.m.s,D.m.t,D.m.s,<span class="dt">L=</span><span class="kw">c</span>(F,F,T)),<span class="dt">digits=</span><span class="dv">2</span>);</code></pre></div>
+<pre><code>## Joint score test of b1 = b2 = b3 = 0 
+##   Score      df       p 
+## 2.5e+01 3.0e+00 1.9e-05 
+## 
+##  Joint score test of b1 = b2 = 0, treating b3 as a nuisance 
+##   Score      df       p 
+## 2.4e+01 2.0e+00 5.4e-06 
+## 
+##  Joint score test of b1 = 0.1, treating b2 and b3 as nuisances 
+## Score    df     p 
+##  1.40  1.00  0.24 
+## 
+##  Individual score test of b3 = 0, treating b1 and b2 as nuisances 
+## Score    df     p 
+##  0.35  1.00  0.55</code></pre>
 </div>
 
 

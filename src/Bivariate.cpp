@@ -1,9 +1,11 @@
 // [[Rcpp::depends(RcppEigen)]]
 // Purpose: Functions for fitting bivariate outcome model
-// Updated: 180314
+// Updated: 180315
 #include <RcppEigen.h>
 
-//' Bivariate parameter update
+//' Bivariate Parameter Update
+//' 
+//' Parameter update for bivariate outcome model.
 //' 
 //' @param yt Target outcome
 //' @param ys Surrogate outcome
@@ -41,11 +43,12 @@ SEXP updateBVR(const Eigen::Map<Eigen::VectorXd> yt, const Eigen::Map<Eigen::Vec
   const Eigen::VectorXd a1 = As*zS;
   // Residual matrix
   Eigen::MatrixXd E(n,2);
-  E.col(0) << (yt-Zt*b1);
-  E.col(1) << (ys-Zs*a1); 
+  E.setZero();
+  E.col(0) = (yt-Zt*b1);
+  E.col(1) = (ys-Zs*a1); 
   // Covariance matrix
   const Eigen::MatrixXd ip = E.transpose()*E;
   const Eigen::MatrixXd s1 = (ip/n);
   // Output
-  return Rcpp::List::create(Rcpp::Named("b1")=b1,Rcpp::Named("a1")=a1,Rcpp::Named("s1")=s1);
+  return Rcpp::List::create(Rcpp::Named("b1")=b1,Rcpp::Named("a1")=a1,Rcpp::Named("s1")=s1,Rcpp::Named("E1")=E);
 }
