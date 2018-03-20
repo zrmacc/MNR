@@ -11,7 +11,7 @@
 
 <meta name="author" content="Zachary McCaw" />
 
-<meta name="date" content="2018-03-15" />
+<meta name="date" content="2018-03-19" />
 
 <title>README</title>
 
@@ -119,7 +119,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">README</h1>
 <h4 class="author"><em>Zachary McCaw</em></h4>
-<h4 class="date"><em>2018-03-15</em></h4>
+<h4 class="date"><em>2018-03-19</em></h4>
 
 </div>
 
@@ -184,7 +184,7 @@ print(D.bnr$Alpha);</code></pre>
 </div>
 <div id="trivariate-outcome" class="section level2">
 <h2>Trivariate Outcome</h2>
-<p>The list <code>D.mnr</code> contains a simulated data set for <span class="math inline">\(n=1000\)</span> subjects with trivariate normal outcomes. The target and surrogate outcomes have unit variances, and an exchangeable correlation structure, with <span class="math inline">\(\rho=0.5\)</span>. Each outcome depends on a design matrix containing three independent standard normal covariates. <code>Beta</code> contains the regression coefficients used to generate the subject-specific target mean <span class="math inline">\(\mu_{T,i}\)</span> from the target design matrix <code>D.t</code>. Likewise, <code>Alpha</code> contains the regression coefficients used to generate the subject-specific surrogate means <span class="math inline">\(\mu_{S,i}\)</span> from the surrogate design matrices. Note that, in the case of multiple surrogates, <code>D.s</code> is a <em>list</em> of design matrices, with one matrix per subject. As currently implemented, the same mean model is adopted for each surrogate outcome.</p>
+<p>The list <code>D.mnr</code> contains a simulated data set for <span class="math inline">\(n=1000\)</span> subjects with trivariate normal outcomes. The target and surrogate outcomes have unit variances, and an exchangeable correlation structure, with <span class="math inline">\(\rho=0.5\)</span>. The target and first surrogate outcomes depend on three independent standard normal covariates, whereas the second surrogate outcome depends on four such covariates. <code>Beta</code> contains the regression coefficients used to generate the subject-specific target mean <span class="math inline">\(\mu_{T,i}\)</span> from the target design matrix <code>D.t</code>. Likewise, <code>Alpha</code> contains the regression coefficients used to generate the subject-specific surrogate means <span class="math inline">\(\mu_{S,i}\)</span> from the surrogate design matrices. In the case of multiple surrogates, <code>D.s</code> is a <em>list</em> of design matrices, with one matrix per surrogate outcome. By default, each surrogate mean is afford its own regression parameters. To fit a <em>parallel coefficient model</em>, in which each surrogate mean has the same regression parameters, set <code>parallel=T</code> within <code>Score.mnr</code>. Fitting a parallel coefficient requires that each design matrix has the same columns.</p>
 <pre class="r"><code>library(MNR);
 # Target outcome
 y.m.t = D.mnr$y.t;

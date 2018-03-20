@@ -1,5 +1,76 @@
 # Purpose: Score tests for multivariate outcome regression
-# Updated: 180315
+# Updated: 180319
+
+########################
+# Construct Xi
+########################
+
+#' Construct Overall Surrogate Design
+#' 
+#' @param D.s List of \eqn{k-1} design matrices
+#' @param parallel If true, assumes a parallel coefficient design, where each 
+#'   secondary outcome has the same regression parameters.
+#' @export
+
+constrXi = function(D.s,parallel){
+  # Number of surrogates
+  m = length(D.s);
+  flag = F;
+  # Check each matrix has n observations
+  obs = unlist(lapply(D.s,nrow));
+  if(length(unique(obs))>1){
+    flag = T;
+    stop("Each design matrix must have n observations.");
+  };
+  n = unique(obs);
+  # If parallel, check each matrix has q columns
+  cols = unlist(lapply(D.s,ncol));
+  if(parallel&(length(unique(cols))>1)){
+    flag = T;
+    stop("If parallel, each design matrix must have q columns.");
+  }
+  if(!parallel){
+    # Total columns in Z.s
+    Q = sum(cols);
+    # Empty lists for design matrices and column names
+    Z.s = Cn.s = list();
+    # First matrix
+    A = model.matrix(~0+.,data=data.frame(D.s[[1]]));
+    Cn.s[[1]] = colnames(A);
+    A = cbind(A,array(0,dim=c(n,Q-cols[1])));
+    Z.s[[1]] = A;
+    # Last matrix
+    B = model.matrix(~0+.,data=data.frame(D.s[[m]]));
+    Cn.s[[m]] = colnames(B)
+    B = cbind(array(0,dim=c(n,Q-cols[m])),B);
+    Z.s[[m]] = B;
+    # Intervening matrices
+    if(m>2){
+      for(j in 2:(m-1)){
+        # Left sum
+        ls = sum(cols[1:(j-1)]);
+        # Right sum
+        rs = sum(cols[(j+1):m]);
+        # Formatted matrix
+        C = model.matrix(~0+.,data=data.frame(D.s[[j]]));
+        Cn.s[[j]] = colnames(C);
+        C = cbind(array(0,dim=c(n,ls)),C,array(0,dim=c(n,rs)));
+        Z.s[[j]] = C;
+      }
+    }
+  } else {
+    Z.s = lapply(D.s,FUN=function(x){model.matrix(~0+.,data=data.frame(x))});
+    Cn.s = list(colnames(Z.s[[1]]));
+  }
+  # Function to intercalate matrices
+  aux = function(x){do.call(rbind,x)[order(sequence(sapply(x,nrow))),]};
+  
+  # Final matrix
+  Z.s = aux(Z.s);
+  Z.s = cbind(1,Z.s);
+  colnames(Z.s) = c("(Intercept)",unlist(Cn.s));
+  return(Z.s);
+}
 
 ########################
 # Bivariate case
@@ -36,6 +107,7 @@
 
 Score.bnr = function(y.t,y.s,D.t,D.s,L,b0,maxit=10,eps=1e-6){
   # Input checks
+  if(is.matrix(y.s)){if(ncol(y.s)>1){stop("For multiple surrogates, use Score.mnr")}};
   if(!is.logical(L)){stop("L should be a logical vector.")};
   if(length(L)!=ncol(D.t)){stop("L should have as many entries as columns in D.t.")};
   if(sum(L)==0){stop("At least 1 entry of L should be TRUE.")}
@@ -109,6 +181,8 @@ Score.bnr = function(y.t,y.s,D.t,D.s,L,b0,maxit=10,eps=1e-6){
 #'   null.
 #' @param b0 Value of the regression coefficient for the selected columns under
 #'   the null. Defaults to zero.
+#' @param parallel If true, assumes a parallel coefficient design, where each 
+#'   secondary outcome has the same regression parameters.
 #' @param maxit Maximum number of parameter updates.
 #' @param eps Minimum acceptable improvement in log likelihood.
 #' 
@@ -125,24 +199,23 @@ Score.bnr = function(y.t,y.s,D.t,D.s,L,b0,maxit=10,eps=1e-6){
 #' # Test for the effect of \eqn{\beta_{3}}
 #' Score.mnr(y.t,y.s,D.t,D.s,L=c(FALSE,FALSE,TRUE));
 
-Score.mnr = function(y.t,y.s,D.t,D.s,L,b0,maxit=10,eps=1e-6){
+Score.mnr = function(y.t,y.s,D.t,D.s,L,b0,parallel=F,maxit=10,eps=1e-6){
   # Input checks
+  if(is.vector(y.s)){stop("For a single surrogate, use Score.bnr")};
   if(!is.logical(L)){stop("L should be a logical vector.")};
   if(length(L)!=ncol(D.t)){stop("L should have as many entries as columns in D.t.")};
   if(sum(L)==0){stop("At least 1 entry of L should be TRUE.")}
   if(missing(b0)){b0=rep(0,times=sum(L))};
   # Check for missingness
-  A = cbind(y.t,y.s,D.t);
+  A = cbind(y.t,y.s,D.t,do.call(cbind,D.s));
   aux = function(x){sum(is.na(x))>0};
-  keep1 = !apply(A,MARGIN=1,FUN=aux);
-  keep2 = !unlist(lapply(X=D.s,FUN=aux));
-  keep = (keep1&keep2);
+  keep = !apply(A,MARGIN=1,FUN=aux);
   if(sum(!keep)>0){
     warning("Missing data detected. These observations are excluded.")
     y.t = y.t[keep];
     y.s = y.s[keep];
     D.t = D.t[keep,];
-    D.s = D.s[keep,];
+    D.s = lapply(D.s,FUN=function(x){x[keep,]});
   };
   # Partition target design
   D.t.reduced = D.t[,!L,drop=F];
@@ -155,10 +228,10 @@ Score.mnr = function(y.t,y.s,D.t,D.s,L,b0,maxit=10,eps=1e-6){
   } else {
     X2 = model.matrix(~.,data=data.frame(D.t.reduced));
   };
-  Xi = do.call(rbind,D.s);
-  Xi = model.matrix(~.,data=data.frame(Xi));
+  # Form Z.s
+  Z.s = constrXi(D.s=D.s,parallel=parallel);
   # Fit null model
-  M0 = fit.mnr(y.t=y.t,y.s=y.s,Z.t=X2,Z.s=Xi,maxit=maxit,eps=eps,report=F);
+  M0 = fit.mnr(y.t=y.t,y.s=y.s,Z.t=X2,Z.s=Z.s,maxit=maxit,eps=eps,report=F);
   # Extract precision
   Lambda = vcov(M0,type="Outcome",inv=T);
   # Partition precision
@@ -172,7 +245,7 @@ Score.mnr = function(y.t,y.s,D.t,D.s,L,b0,maxit=10,eps=1e-6){
   Score = infoMNR(n=n,A=X1,B=eT,L=LTT) + infoMNR(n=n,A=X1,B=eS,L=LTS);
   # Covariance matrix
   I11 = infoMNR(n=n,A=X1,B=X1,L=LTT);
-  I12 = cbind(infoMNR(n=n,A=X1,B=X2,L=LTT),infoMNR(n=n,A=X1,B=Xi,L=LTS));
+  I12 = cbind(infoMNR(n=n,A=X1,B=X2,L=LTT),infoMNR(n=n,A=X1,B=Z.s,L=LTS));
   I22 = vcov(M0,type="Regression",inv=F);
   # Efficient information
   V = SchurC(I11=I11,I22=I22,I12=I12);

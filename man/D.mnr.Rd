@@ -4,22 +4,23 @@
 \name{D.mnr}
 \alias{D.mnr}
 \title{Simulated Data with Triivariate Normal Outcomes}
-\format{A list of vectors and matrices. \describe{ \item{y.t}{Numeric vector
-  containing the target outcome.} \item{y.s}{Numeric matrix containing the
+\format{A list of vectors and matrices. \describe{ \item{y.t}{Numeric vector 
+  containing the target outcome.} \item{y.s}{Numeric matrix containing the 
   surrogate outcomes.} \item{D.t}{Design matrix for the target outcome.} 
   \item{D.s}{List of design matrices for the surrogate outcomes.} 
   \item{Beta}{Regression coefficients used to generate the target outcome.} 
-  \item{Alpha}{Regression coefficients used to generate the surrogate
+  \item{Alpha}{Regression coefficients used to generate the surrogate 
   outcome.} }}
 \usage{
 D.mnr
 }
 \description{
 Example data for 1000 subjects. The outcomes are trivariate normal with unit 
-variances and an exchangeable correlation structure, \eqn{\rho=0.5}. The
-target outcome and surrogate outcomes for each subject each depend on three
-independent N(0,1) covariates. \code{Beta} contains regression coefficients
-for the target outcome, and \code{Alpha} contains regression coefficients for
-the secondary ("surrogate") outcome.
+variances and an exchangeable correlation structure, \eqn{\rho=0.5}. The 
+target first surrogate outcomes each depend on three independent N(0,1)
+covariates, whereas the second surrogate outcome depends on four such
+covariates. \code{Beta} contains regression coefficients for the target
+outcome, and \code{Alpha} contains regression coefficients for the secondary
+("surrogate") outcomes.
 }
 \keyword{datasets}

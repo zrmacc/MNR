@@ -12,7 +12,7 @@
 
 <meta name="author" content="Zachary McCaw" />
 
-<meta name="date" content="2018-03-15" />
+<meta name="date" content="2018-03-19" />
 
 <title>Multivariate Normal Regression</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Multivariate Normal Regression</h1>
 <h4 class="author"><em>Zachary McCaw</em></h4>
-<h4 class="date"><em>2018-03-15</em></h4>
+<h4 class="date"><em>2018-03-19</em></h4>
 
 
 
@@ -131,7 +131,7 @@ D.b.s =<span class="st"> </span>D.bnr$D.s;
 </div>
 <div id="trivariate-outcome" class="section level2">
 <h2>Trivariate Outcome</h2>
-<p>The list <code>D.mnr</code> contains a simulated data set for <span class="math inline">\(n=1000\)</span> subjects with trivariate normal outcomes. The target and surrogate outcomes have unit variances, and an exchangeable correlation structure, with <span class="math inline">\(\rho=0.5\)</span>. Each outcome depends on a design matrix containing three independent standard normal covariates. <code>Beta</code> contains the regression coefficients used to generate the subject-specific target mean <span class="math inline">\(\mu_{T,i}\)</span> from the target design matrix <code>D.t</code>. Likewise, <code>Alpha</code> contains the regression coefficients used to generate the subject-specific surrogate means <span class="math inline">\(\mu_{S,i}\)</span> from the surrogate design matrices. Note that, in the case of multiple surrogates, <code>D.s</code> is a <em>list</em> of design matrices, with one matrix per subject. As currently implemented, the same mean model is adopted for each surrogate outcome.</p>
+<p>The list <code>D.mnr</code> contains a simulated data set for <span class="math inline">\(n=1000\)</span> subjects with trivariate normal outcomes. The target and surrogate outcomes have unit variances, and an exchangeable correlation structure, with <span class="math inline">\(\rho=0.5\)</span>. The target and first surrogate outcomes depend on three independent standard normal covariates, whereas the second surrogate outcome depends on four such covariates. <code>Beta</code> contains the regression coefficients used to generate the subject-specific target mean <span class="math inline">\(\mu_{T,i}\)</span> from the target design matrix <code>D.t</code>. Likewise, <code>Alpha</code> contains the regression coefficients used to generate the subject-specific surrogate means <span class="math inline">\(\mu_{S,i}\)</span> from the surrogate design matrices. In the case of multiple surrogates, <code>D.s</code> is a <em>list</em> of design matrices, with one matrix per surrogate outcome. By default, each surrogate mean is afford its own regression parameters. To fit a <em>parallel coefficient model</em>, in which each surrogate mean has the same regression parameters, set <code>parallel=T</code> within <code>Score.mnr</code>. Fitting a parallel coefficient requires that each design matrix has the same columns.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MNR);
 <span class="co"># Target outcome</span>
 y.m.t =<span class="st"> </span>D.mnr$y.t;
@@ -147,8 +147,8 @@ D.m.s =<span class="st"> </span>D.mnr$D.s;
 <span class="kw">print</span>(D.mnr$Alpha);</code></pre></div>
 <pre><code>##   b0   b1   b2   b3 
 ## -1.0  0.1  0.1  0.0 
-##   a0   a1   a2   a3 
-##  1.0 -0.1 -0.1 -0.1</code></pre>
+##  a10  a11  a12  a13  a20  a21  a22  a23  a24 
+##  1.0 -0.1 -0.1 -0.1  2.0  0.1  0.1  0.1  0.1</code></pre>
 </div>
 </div>
 <div id="bivariate-outcome-regression" class="section level1">
@@ -191,19 +191,19 @@ D.m.s =<span class="st"> </span>D.mnr$D.s;
 <span class="kw">signif</span>(<span class="kw">Score.mnr</span>(y.m.t,y.m.s,D.m.t,D.m.s,<span class="dt">L=</span><span class="kw">c</span>(F,F,T)),<span class="dt">digits=</span><span class="dv">2</span>);</code></pre></div>
 <pre><code>## Joint score test of b1 = b2 = b3 = 0 
 ##   Score      df       p 
-## 2.5e+01 3.0e+00 1.9e-05 
+## 2.6e+01 3.0e+00 9.9e-06 
 ## 
 ##  Joint score test of b1 = b2 = 0, treating b3 as a nuisance 
 ##   Score      df       p 
-## 2.4e+01 2.0e+00 5.4e-06 
+## 2.5e+01 2.0e+00 3.0e-06 
 ## 
 ##  Joint score test of b1 = 0.1, treating b2 and b3 as nuisances 
 ## Score    df     p 
-##  1.40  1.00  0.24 
+## 0.014 1.000 0.900 
 ## 
 ##  Individual score test of b3 = 0, treating b1 and b2 as nuisances 
 ## Score    df     p 
-##  0.35  1.00  0.55</code></pre>
+##  0.39  1.00  0.53</code></pre>
 </div>
 
 

@@ -4,7 +4,8 @@
 \alias{Score.mnr}
 \title{Multivariate Regression Score Test}
 \usage{
-Score.mnr(y.t, y.s, D.t, D.s, L, b0, maxit = 10, eps = 1e-06)
+Score.mnr(y.t, y.s, D.t, D.s, L, b0, parallel = F, maxit = 10,
+  eps = 1e-06)
 }
 \arguments{
 \item{y.t}{Target outcome.}
@@ -21,6 +22,9 @@ null.}
 
 \item{b0}{Value of the regression coefficient for the selected columns under
 the null. Defaults to zero.}
+
+\item{parallel}{If true, assumes a parallel coefficient design, where each 
+secondary outcome has the same regression parameters.}
 
 \item{maxit}{Maximum number of parameter updates.}
 
