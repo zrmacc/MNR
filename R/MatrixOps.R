@@ -7,6 +7,7 @@
 #' 
 #' @param L Logical vector indicating the components of interest
 #' @param M Fitted model
+#' @export 
 
 effInfo = function(L,M){
   # Input checks
