@@ -16,6 +16,7 @@
 //' @param b0 Current beta
 //' @param a0 Current alpha
 //' @param s0 Current sigma
+//' @export 
 // [[Rcpp::export]]
 
 SEXP updateBVR(const Eigen::Map<Eigen::VectorXd> yt, const Eigen::Map<Eigen::VectorXd> ys,

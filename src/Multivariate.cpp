@@ -115,6 +115,7 @@ Eigen::MatrixXd resid(const int m, const Eigen::VectorXd eT,
 //' @param b0 Current beta
 //' @param a0 Current alpha
 //' @param s0 Current sigma
+//' @export 
 // [[Rcpp::export]]
 
 SEXP updateMNR(const Eigen::Map<Eigen::VectorXd> yt, const Eigen::Map<Eigen::VectorXd> S,

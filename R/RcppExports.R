@@ -14,6 +14,7 @@
 #' @param b0 Current beta
 #' @param a0 Current alpha
 #' @param s0 Current sigma
+#' @export 
 updateBVR <- function(yt, ys, Zt, Zs, At, As, b0, a0, s0) {
     .Call('_MNR_updateBVR', PACKAGE = 'MNR', yt, ys, Zt, Zs, At, As, b0, a0, s0)
 }
@@ -113,6 +114,7 @@ SchurC <- function(I11, I22, I12) {
 #' @param b0 Current beta
 #' @param a0 Current alpha
 #' @param s0 Current sigma
+#' @export 
 updateMNR <- function(yt, S, Zt, Zs, At, b0, a0, s0) {
     .Call('_MNR_updateMNR', PACKAGE = 'MNR', yt, S, Zt, Zs, At, b0, a0, s0)
 }

@@ -82,10 +82,10 @@ constrXi = function(D.s,parallel){
 #' 
 #' @param y.t Target outcome.
 #' @param y.s Surrogate outcome.
-#' @param D.t Target design matrix.
-#' @param D.s Surrogate design matrix.
+#' @param Z.t Target model matrix. Include intercept and expand factors.
+#' @param Z.s Surrogate model matrix. Include intercept and expand factors.
 #' @param L Logical vector, with as many entires as columns in the target
-#'   design, indicating which columns of the target design are fixed under the
+#'   model, indicating which columns of the target model are fixed under the
 #'   null.
 #' @param b0 Value of the regression coefficient for the selected columns under
 #'   the null. Defaults to zero.
@@ -98,68 +98,50 @@ constrXi = function(D.s,parallel){
 #' @examples
 #' y.t = D.bnr$y.t;
 #' y.s = D.bnr$y.s;
-#' D.t = D.bnr$D.t;
-#' D.s = D.bnr$D.s;
+#' Z.t = model.matrix(~.,data=data.frame(D.bnr$D.t));
+#' Z.s = model.matrix(~.,data=data.frame(D.bnr$D.s));
 #' # Test for an overall effect
-#' Wald.bnr(y.t,y.s,D.t,D.s,L=c(TRUE,TRUE,TRUE));
+#' # Note: Null model should contain the intercept
+#' Wald.bnr(y.t,y.s,Z.t,Z.s,L=c(FALSE,TRUE,TRUE,TRUE));
 #' # Test for the effect of \eqn{\beta_{3}}
-#' Wald.bnr(y.t,y.s,D.t,D.s,L=c(FALSE,FALSE,TRUE));
+#' Wald.bnr(y.t,y.s,Z.t,Z.s,L=c(FALSE,FALSE,FALSE,TRUE));
 
-Wald.bnr = function(y.t,y.s,D.t,D.s,L,b0,maxit=10,eps=1e-6){
+Wald.bnr = function(y.t,y.s,Z.t,Z.s,L,b0,maxit=10,eps=1e-6){
   # Input checks
   if(is.matrix(y.s)){if(ncol(y.s)>1){stop("For multiple surrogates, use Score.mnr")}};
   if(!is.logical(L)){stop("L should be a logical vector.")};
-  if(length(L)!=ncol(D.t)){stop("L should have as many entries as columns in D.t.")};
+  if(length(L)!=ncol(Z.t)){stop("L should have as many entries as columns in Z.t.")};
   if(sum(L)==0){stop("At least 1 entry of L should be TRUE.")}
+  if(sum(L)==length(L)){stop("At least 1 entry of L should be FALSE.")};
   if(missing(b0)){b0=rep(0,times=sum(L))};
   # Check for missingness
-  A = cbind(y.t,y.s,D.t,D.s);
+  A = cbind(y.t,y.s,Z.t,Z.s);
   aux = function(x){sum(is.na(x))>0};
   keep = !apply(A,MARGIN=1,FUN=aux);
   if(sum(!keep)>0){
     warning("Missing data detected. These observations are excluded.")
     y.t = y.t[keep];
     y.s = y.s[keep];
-    D.t = D.t[keep,];
-    D.s = D.s[keep,];
+    Z.t = Z.t[keep,];
+    Z.s = Z.s[keep,];
   };
   # Partition target design
-  D.t.reduced = D.t[,!L,drop=F];
-  D.t.null = D.t[,L,drop=F];
-  X1 = model.matrix(~0+.,data=data.frame(D.t.null));
-  if(ncol(D.t.reduced)==0){
-    n = nrow(D.t.null);
-    X2 = matrix(rep(1,n),ncol=1);
-  } else {
-    X2 = model.matrix(~.,data=data.frame(D.t.reduced));
-  };
-  # Convert to model matrices
-  Z.t = model.matrix(~.,data=data.frame(D.t));
-  Xi = model.matrix(~.,data=data.frame(D.s));
+  X1 = Z.t[,L,drop=F];
+  X2 = Z.t[,!L,drop=F];
+  Xi = Z.s;
   # Fit full model
   M0 = fit.bnr(y.t=y.t,y.s=y.s,Z.t=Z.t,Z.s=Xi,maxit=maxit,eps=eps,report=F);
-  # Extract precision
-  Lambda = vcov(M0,type="Outcome",inv=T);
-  # Partition precision
-  LTT = Lambda[1,1];
-  LTS = Lambda[1,2];
-  LSS = Lambda[2,2];
-  # Covariance matrix
-  I11 = LTT*fastIP(X1,X1);
-  I12 = cbind(LTT*fastIP(X1,X2),LTS*fastIP(X1,Xi));
-  Lc = c(T,!L,rep(T,ncol(Xi)));
-  I22 = vcov(M0,type="Regression",inv=F)[Lc,Lc];
   # Efficient information
-  V = SchurC(I11=I11,I22=I22,I12=I12);
+  V = effInfo(L,M0);
   # Wald statistic
-  b1 = coef(M0,type="Beta")[c(F,L)];
+  b1 = coef(M0,type="Beta")[L];
   Tw = fastQF(x=(b1-b0),A=V);
   # Degrees of freedom
   df = ncol(X1);
   # P value
   p = pchisq(q=Tw,df=df,lower.tail=F);
   # Output
-  Out = c("Score"=Tw,"df"=df,"p"=p);
+  Out = c("Wald"=Tw,"df"=df,"p"=p);
   return(Out);
 }
 
@@ -169,8 +151,8 @@ Wald.bnr = function(y.t,y.s,D.t,D.s,L,b0,maxit=10,eps=1e-6){
 #' 
 #' @param y.t Target outcome.
 #' @param y.s Surrogate outcome.
-#' @param D.t Target design matrix.
-#' @param D.s Surrogate design matrix.
+#' @param Z.t Target model matrix. Include intercept and expand factors.
+#' @param Z.s Surrogate model matrix. Include intercept and expand factors.
 #' @param L Logical vector, with as many entires as columns in the target
 #'   design, indicating which columns of the target design are fixed under the
 #'   null.
@@ -185,43 +167,37 @@ Wald.bnr = function(y.t,y.s,D.t,D.s,L,b0,maxit=10,eps=1e-6){
 #' @examples
 #' y.t = D.bnr$y.t;
 #' y.s = D.bnr$y.s;
-#' D.t = D.bnr$D.t;
-#' D.s = D.bnr$D.s;
+#' Z.t = model.matrix(~.,data=data.frame(D.bnr$D.t));
+#' Z.s = model.matrix(~.,data=data.frame(D.bnr$D.s));
 #' # Test for an overall effect
-#' Score.bnr(y.t,y.s,D.t,D.s,L=c(TRUE,TRUE,TRUE));
+#' # Note: Null model should contain the intercept
+#' Score.bnr(y.t,y.s,Z.t,Z.s,L=c(FALSE,TRUE,TRUE,TRUE));
 #' # Test for the effect of \eqn{\beta_{3}}
-#' Score.bnr(y.t,y.s,D.t,D.s,L=c(FALSE,FALSE,TRUE));
+#' Score.bnr(y.t,y.s,Z.t,Z.s,L=c(FALSE,FALSE,FALSE,TRUE));
 
-Score.bnr = function(y.t,y.s,D.t,D.s,L,b0,maxit=10,eps=1e-6){
+Score.bnr = function(y.t,y.s,Z.t,Z.s,L,b0,maxit=10,eps=1e-6){
   # Input checks
   if(is.matrix(y.s)){if(ncol(y.s)>1){stop("For multiple surrogates, use Score.mnr")}};
   if(!is.logical(L)){stop("L should be a logical vector.")};
-  if(length(L)!=ncol(D.t)){stop("L should have as many entries as columns in D.t.")};
+  if(length(L)!=ncol(Z.t)){stop("L should have as many entries as columns in D.t.")};
   if(sum(L)==0){stop("At least 1 entry of L should be TRUE.")}
+  if(sum(L)==length(L)){stop("At least 1 entry of L should be FALSE.")};
   if(missing(b0)){b0=rep(0,times=sum(L))};
   # Check for missingness
-  A = cbind(y.t,y.s,D.t,D.s);
+  A = cbind(y.t,y.s,Z.t,Z.s);
   aux = function(x){sum(is.na(x))>0};
   keep = !apply(A,MARGIN=1,FUN=aux);
   if(sum(!keep)>0){
     warning("Missing data detected. These observations are excluded.")
     y.t = y.t[keep];
     y.s = y.s[keep];
-    D.t = D.t[keep,];
-    D.s = D.s[keep,];
+    Z.t = Z.t[keep,];
+    Z.s = Z.s[keep,];
     };
   # Partition target design
-  D.t.reduced = D.t[,!L,drop=F];
-  D.t.null = D.t[,L,drop=F];
-  # Convert to model matrices
-  X1 = model.matrix(~0+.,data=data.frame(D.t.null));
-  if(ncol(D.t.reduced)==0){
-    n = nrow(D.t.null);
-    X2 = matrix(rep(1,n),ncol=1);
-  } else {
-    X2 = model.matrix(~.,data=data.frame(D.t.reduced));
-  };
-  Xi = model.matrix(~.,data=data.frame(D.s));
+  X2 = Z.t[,!L,drop=F];
+  X1 = Z.t[,L,drop=F];
+  Xi = Z.s;
   # Fit null model
   M0 = fit.bnr(y.t=y.t,y.s=y.s,Z.t=X2,Z.s=Xi,maxit=maxit,eps=eps,report=F);
   # Extract precision
