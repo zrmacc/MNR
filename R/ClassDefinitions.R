@@ -124,7 +124,7 @@ vcov.mnr = function(object,...,type="Regression",inv=T){
     Iba = object@Information$Iba;
     # Binding
     A = cbind(Ibb,Iba);
-    B = cbind(fastInv(Iba),Iaa);
+    B = cbind(fastT(Iba),Iaa);
     Out = rbind(A,B);
     # Invert
     if(inv){Out = fastInv(Out);}
