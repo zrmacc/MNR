@@ -4,19 +4,19 @@
 \alias{Wald.bnr}
 \title{Bivariate Regression Wald Test}
 \usage{
-Wald.bnr(y.t, y.s, D.t, D.s, L, b0, maxit = 10, eps = 1e-06)
+Wald.bnr(y.t, y.s, Z.t, Z.s, L, b0, maxit = 10, eps = 1e-06)
 }
 \arguments{
 \item{y.t}{Target outcome.}
 
 \item{y.s}{Surrogate outcome.}
 
-\item{D.t}{Target design matrix.}
+\item{Z.t}{Target model matrix. Include intercept and expand factors.}
 
-\item{D.s}{Surrogate design matrix.}
+\item{Z.s}{Surrogate model matrix. Include intercept and expand factors.}
 
 \item{L}{Logical vector, with as many entires as columns in the target
-design, indicating which columns of the target design are fixed under the
+model, indicating which columns of the target model are fixed under the
 null.}
 
 \item{b0}{Value of the regression coefficient for the selected columns under
@@ -32,10 +32,11 @@ Wald test of \eqn{H_{0}:\beta_{1}=\beta_{10}} in the bivariate outcome model.
 \examples{
 y.t = D.bnr$y.t;
 y.s = D.bnr$y.s;
-D.t = D.bnr$D.t;
-D.s = D.bnr$D.s;
+Z.t = model.matrix(~.,data=data.frame(D.bnr$D.t));
+Z.s = model.matrix(~.,data=data.frame(D.bnr$D.s));
 # Test for an overall effect
-Wald.bnr(y.t,y.s,D.t,D.s,L=c(TRUE,TRUE,TRUE));
+# Note: Null model should contain the intercept
+Wald.bnr(y.t,y.s,Z.t,Z.s,L=c(FALSE,TRUE,TRUE,TRUE));
 # Test for the effect of \\eqn{\\beta_{3}}
-Wald.bnr(y.t,y.s,D.t,D.s,L=c(FALSE,FALSE,TRUE));
+Wald.bnr(y.t,y.s,Z.t,Z.s,L=c(FALSE,FALSE,FALSE,TRUE));
 }
