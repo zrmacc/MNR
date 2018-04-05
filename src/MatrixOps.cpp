@@ -1,7 +1,21 @@
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
 
-//' Fast Matrix Transpose
+//' Matrix vector product
+//'
+//' Calculates \eqn{Ab};
+//'
+//' @param A Numeric matrix.
+//' @param b Numeric vector.
+//' @export
+// [[Rcpp::export]]
+SEXP fastMvp(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::VectorXd> b){
+  const Eigen::MatrixXd B = A*b;
+  return Rcpp::wrap(B);
+}
+
+
+//' Matrix Transpose
 //'
 //' Constructs \eqn{A'} from \eqn{A}.
 //'
@@ -13,7 +27,7 @@ SEXP fastT(const Eigen::Map<Eigen::MatrixXd> A){
   return Rcpp::wrap(At);
 }
 
-//' Fast Matrix Inner Product
+//' Matrix Inner Product
 //'
 //' Calculates \eqn{A'B}.
 //'
@@ -26,7 +40,7 @@ SEXP fastIP(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::MatrixX
   return Rcpp::wrap(AtB);
 }
 
-//' Fast Matrix Inverse
+//' Matrix Inverse
 //'
 //' @param A Numeric matrix.
 //' @export
@@ -36,7 +50,7 @@ SEXP fastInv(const Eigen::Map<Eigen::MatrixXd> A){
   return Rcpp::wrap(Ai);
 }
 
-//' Fast Matrix Determinant
+//' Matrix Determinant
 //'
 //' Calculates \eqn{\det(A)}.
 //'
@@ -48,7 +62,7 @@ SEXP fastDet(const Eigen::Map<Eigen::MatrixXd> A){
   return Rcpp::wrap(d);
 }
 
-//' Fast Quadratic Form
+//' Quadratic Form
 //' 
 //' Calculates \eqn{x'Ax}.
 //' 

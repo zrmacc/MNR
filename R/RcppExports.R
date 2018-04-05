@@ -5,31 +5,32 @@
 #' 
 #' Parameter update for bivariate outcome model.
 #' 
-#' @param yt Target outcome
-#' @param ys Surrogate outcome
-#' @param Zt Target design
-#' @param Zs Surrogate design
-#' @param At Target inc. proj.
-#' @param As Surrogate inc. proj.
+#' @param t Target outcome
+#' @param s Surrogate outcome
+#' @param X Target design
+#' @param Xi Surrogate design
+#' @param B Target inc. proj.
+#' @param A Surrogate inc. proj.
 #' @param b0 Current beta
 #' @param a0 Current alpha
 #' @param s0 Current sigma
 #' @export 
-updateBVR <- function(yt, ys, Zt, Zs, At, As, b0, a0, s0) {
-    .Call('_MNR_updateBVR', PACKAGE = 'MNR', yt, ys, Zt, Zs, At, As, b0, a0, s0)
+updateBVR <- function(t, s, X, Xi, B, A, b0, a0, s0) {
+    .Call('_MNR_updateBVR', PACKAGE = 'MNR', t, s, X, Xi, B, A, b0, a0, s0)
 }
 
-#' Sparse Kronecker Product
-#' 
-#' Forms the product \eqn{I_{n\times n}\otimes A}.
-#' 
-#' @param n Dimension of identity matrix
-#' @param A Numeric matrix
-sKroneckerP <- function(n, A) {
-    .Call('_MNR_sKroneckerP', PACKAGE = 'MNR', n, A)
+#' Matrix vector product
+#'
+#' Calculates \eqn{Ab};
+#'
+#' @param A Numeric matrix.
+#' @param b Numeric vector.
+#' @export
+fastMvp <- function(A, b) {
+    .Call('_MNR_fastMvp', PACKAGE = 'MNR', A, b)
 }
 
-#' Fast Matrix Transpose
+#' Matrix Transpose
 #'
 #' Constructs \eqn{A'} from \eqn{A}.
 #'
@@ -39,7 +40,7 @@ fastT <- function(A) {
     .Call('_MNR_fastT', PACKAGE = 'MNR', A)
 }
 
-#' Fast Matrix Inner Product
+#' Matrix Inner Product
 #'
 #' Calculates \eqn{A'B}.
 #'
@@ -50,7 +51,7 @@ fastIP <- function(A, B) {
     .Call('_MNR_fastIP', PACKAGE = 'MNR', A, B)
 }
 
-#' Fast Matrix Inverse
+#' Matrix Inverse
 #'
 #' @param A Numeric matrix.
 #' @export
@@ -58,7 +59,7 @@ fastInv <- function(A) {
     .Call('_MNR_fastInv', PACKAGE = 'MNR', A)
 }
 
-#' Fast Matrix Determinant
+#' Matrix Determinant
 #'
 #' Calculates \eqn{\det(A)}.
 #'
@@ -68,7 +69,7 @@ fastDet <- function(A) {
     .Call('_MNR_fastDet', PACKAGE = 'MNR', A)
 }
 
-#' Fast Quadratic Form
+#' Quadratic Form
 #' 
 #' Calculates \eqn{x'Ax}.
 #' 
@@ -102,21 +103,30 @@ SchurC <- function(I11, I22, I12) {
     .Call('_MNR_SchurC', PACKAGE = 'MNR', I11, I22, I12)
 }
 
+#' Initialize Alpha
+#' 
+#' @param Xi Surrogate design matrix
+#' @param s Surrogate outcome
+#' @export 
+alpha0 <- function(Xi, s) {
+    .Call('_MNR_alpha0', PACKAGE = 'MNR', Xi, s)
+}
+
 #' Multivariate Parameter Update
 #' 
 #' Parameter update for multivariate outcome model.
 #' 
-#' @param yt Target outcome
-#' @param S Surrogate outcome vector
-#' @param Zt Target design
-#' @param Zs Surrogate design
-#' @param At Target inc. proj.
+#' @param t Target outcome
+#' @param s Surrogate outcome vector
+#' @param X Target design
+#' @param Xi Surrogate design
+#' @param B Target inc. proj.
 #' @param b0 Current beta
 #' @param a0 Current alpha
 #' @param s0 Current sigma
 #' @export 
-updateMNR <- function(yt, S, Zt, Zs, At, b0, a0, s0) {
-    .Call('_MNR_updateMNR', PACKAGE = 'MNR', yt, S, Zt, Zs, At, b0, a0, s0)
+updateMNR <- function(t, s, X, Xi, B, b0, a0, s0) {
+    .Call('_MNR_updateMNR', PACKAGE = 'MNR', t, s, X, Xi, B, b0, a0, s0)
 }
 
 #' Information

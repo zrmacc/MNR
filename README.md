@@ -43,7 +43,7 @@ Finally, partition the regression coefficient for the target mean as $\beta = (\
 
 # Example Data
 ## Bivariate Outcome
-The list `D.bnr` contains a simulated data set for $n=1000$ subjects with bivariate normal outcomes. The target and surrogate outcomes have unit variances and correlation $\rho=0.5$. Each outcome depends on a design matrix containing three independent standard normal covariates. `Beta` contains the regression coefficients used to generate the subject-specific target mean $\mu_{T,i}$ from the target design matrix `D.t`. Likewise, `Alpha` contains the regression coefficients used to generate the subject-specific surrogate mean $\mu_{S,i}$ from the surrogate design matrix `D.s`. 
+The list `D.bnr` contains a simulated data set for $n=1000$ subjects with bivariate normal outcomes. The target and surrogate outcomes have unit variances and correlation $\rho=0.5$. Each outcome depends on a model matrix containing an intercept and three independent, standard normal covariates. `Beta` contains the regression coefficients linking the target outcome `y.t` to the target model matrix `Z.t`. Likewise, `Alpha` contains the regression coefficients linking the surrogate outcome `y.s` to the surrogate model matrix `Z.s`.
 
 
 ```r
@@ -52,10 +52,10 @@ library(MNR);
 y.b.t = D.bnr$y.t;
 # Surrogate outcome
 y.b.s = D.bnr$y.s;
-# Target design
-D.b.t = D.bnr$D.t;
-# Surrogate design
-D.b.s = D.bnr$D.s;
+# Target model matrix
+Z.b.t = D.bnr$Z.t;
+# Surrogate model matrix
+Z.b.s = D.bnr$Z.s;
 # Beta
 print(D.bnr$Beta);
 # Alpha
@@ -69,7 +69,7 @@ print(D.bnr$Alpha);
 ##  1.0 -0.1 -0.1 -0.1
 ```
 ## Trivariate Outcome
-The list `D.mnr` contains a simulated data set for $n=1000$ subjects with trivariate normal outcomes. The target and surrogate outcomes have unit variances, and an exchangeable correlation structure, with $\rho=0.5$. The target and first surrogate outcomes depend on three independent standard normal covariates, whereas the second surrogate outcome depends on four such covariates. `Beta` contains the regression coefficients used to generate the subject-specific target mean $\mu_{T,i}$ from the target design matrix `D.t`. Likewise, `Alpha` contains the regression coefficients used to generate the subject-specific surrogate means $\mu_{S,i}$ from the surrogate design matrices. In the case of multiple surrogates, `D.s` is a *list* of design matrices, with one matrix per surrogate outcome. By default, each surrogate mean is afford its own regression parameters. To fit a *parallel coefficient model*, in which each surrogate mean has the same regression parameters, set `parallel=T` within `Score.mnr`. Fitting a parallel coefficient requires that each design matrix has the same columns. 
+The list `D.mnr` contains a simulated data set for $n=1000$ subjects with trivariate normal outcomes. The target and surrogate outcomes have unit variances, and an exchangeable correlation structure, with $\rho=0.5$. The target and first surrogate outcomes depend on three independent standard normal covariates, while the second surrogate outcome depends on four such covariates. `Beta` contains the regression coefficients linking the target outcome `y.t` to the target model matrix `Z.t`. Likewise, `Alpha` contains the regression coefficients linking the surrogate outcomes `y.s` to the surrogate model matrices in `L.s`. In the case of multiple surrogates, `L.s` is a *list* of design matrices, with one matrix per surrogate outcome. By default, each surrogate mean is afford its own regression parameters. To fit a **parallel coefficient model**, in which the surrogate means share a common set of regression coefficients, set `parallel=T`. Fitting a parallel coefficient model requires that each design matrix has the same columns. 
 
 
 ```r
@@ -78,10 +78,10 @@ library(MNR);
 y.m.t = D.mnr$y.t;
 # Surrogate outcome
 y.m.s = D.mnr$y.s;
-# Target design
-D.m.t = D.mnr$D.t;
-# Surrogate design
-D.m.s = D.mnr$D.s;
+# Target model matrix
+Z.m.t = D.mnr$Z.t;
+# Surrogate model matrices
+Z.m.s = D.mnr$L.s;
 # Beta
 print(D.mnr$Beta);
 # Alpha
@@ -91,41 +91,41 @@ print(D.mnr$Alpha);
 ```
 ##   b0   b1   b2   b3 
 ## -1.0  0.1  0.1  0.0 
-##   a0   a1   a2   a3 
-##  1.0 -0.1 -0.1 -0.1
+##  a10  a11  a12  a13  a20  a21  a22  a23  a24 
+##  1.0 -0.1 -0.1 -0.1  2.0  0.1  0.1  0.1  0.1
 ```
 
 # Bivariate Outcome Regression
-The case of a single secondary outcome is implemented separately from the case of multiple secondary outcomes because the fitting procedure is simplified, and thereby faster, in the former. The following demonstrates various score tests possible using the example data. The first is an overall test of $H_{0}:\beta_{1}=\beta_{2}=\beta_{3}=0$, which is false. The second assesses whether $H_{0}:\beta_{1}=\beta_{2}=0$ holds, which is again false, treating $\beta_{3}$ as a nuisance. The third considers $H_{0}:\beta_{1}=0.1$, which is in fact true, while treating $\beta_{2}$ and $\beta_{3}$ as nuisances. The final considers $H_{0}:\beta_{3}=0$, which is again true, treating $\beta_{1}$ and $\beta_{2}$ as nuisances
+The case of a single secondary outcome is implemented separately from the case of multiple secondary outcomes because the fitting procedure is faster in the former. The following demonstrates various score tests possible using the example data. The first is an overall test of $H_{0}:\beta_{1}=\beta_{2}=\beta_{3}=0$, which is false. The second assesses $H_{0}:\beta_{1}=\beta_{2}=0$, which is again false, treating $\beta_{3}$ as a nuisance. The third considers $H_{0}:\beta_{1}=0.1$, which is in fact true, while treating $\beta_{2}$ and $\beta_{3}$ as nuisances. The final considers $H_{0}:\beta_{3}=0$, which is again true, treating $\beta_{1}$ and $\beta_{2}$ as nuisances. All models include an intercept. 
 
 
 ```r
 cat("Joint score test of b1 = b2 = b3 = 0","\n");
-signif(Score.bnr(y.b.t,y.b.s,D.b.t,D.b.s,L=c(T,T,T)),digits=2);
+signif(Score.bnr(y.b.t,y.b.s,Z.b.t,Z.b.s,L=c(F,T,T,T)),digits=2);
 cat("\n","Joint score test of b1 = b2 = 0, treating b3 as a nuisance","\n");
-signif(Score.bnr(y.b.t,y.b.s,D.b.t,D.b.s,L=c(T,T,F)),digits=2);
+signif(Score.bnr(y.b.t,y.b.s,Z.b.t,Z.b.s,L=c(F,T,T,F)),digits=2);
 cat("\n","Joint score test of b1 = 0.1, treating b2 and b3 as nuisances","\n");
-signif(Score.bnr(y.b.t,y.b.s,D.b.t,D.b.s,L=c(T,F,F),b0=c(0.1)),digits=2);
+signif(Score.bnr(y.b.t,y.b.s,Z.b.t,Z.b.s,L=c(F,T,F,F),b0=c(0.1)),digits=2);
 cat("\n","Individual score test of b3 = 0, treating b1 and b2 as nuisances","\n");
-signif(Score.bnr(y.b.t,y.b.s,D.b.t,D.b.s,L=c(F,F,T)),digits=2);
+signif(Score.bnr(y.b.t,y.b.s,Z.b.t,Z.b.s,L=c(F,F,F,T)),digits=2);
 ```
 
 ```
 ## Joint score test of b1 = b2 = b3 = 0 
 ##   Score      df       p 
-## 2.7e+01 3.0e+00 6.6e-06 
+## 1.7e+01 3.0e+00 5.9e-04 
 ## 
 ##  Joint score test of b1 = b2 = 0, treating b3 as a nuisance 
 ##   Score      df       p 
-## 2.7e+01 2.0e+00 1.6e-06 
+## 1.7e+01 2.0e+00 1.8e-04 
 ## 
 ##  Joint score test of b1 = 0.1, treating b2 and b3 as nuisances 
 ## Score    df     p 
-##  0.58  1.00  0.45 
+##   1.6   1.0   0.2 
 ## 
 ##  Individual score test of b3 = 0, treating b1 and b2 as nuisances 
-##  Score     df      p 
-## 0.0031 1.0000 0.9600
+## Score    df     p 
+##  0.19  1.00  0.67
 ```
 
 # Trivariate Outcome Regression
@@ -134,29 +134,29 @@ Hypothesis testing for two or more surrogate outcomes is analogous to the bivari
 
 ```r
 cat("Joint score test of b1 = b2 = b3 = 0","\n");
-signif(Score.mnr(y.m.t,y.m.s,D.m.t,D.m.s,L=c(T,T,T)),digits=2);
+signif(Score.mnr(y.m.t,y.m.s,Z.m.t,Z.m.s,L=c(F,T,T,T)),digits=2);
 cat("\n","Joint score test of b1 = b2 = 0, treating b3 as a nuisance","\n");
-signif(Score.mnr(y.m.t,y.m.s,D.m.t,D.m.s,L=c(T,T,F)),digits=2);
+signif(Score.mnr(y.m.t,y.m.s,Z.m.t,Z.m.s,L=c(F,T,T,F)),digits=2);
 cat("\n","Joint score test of b1 = 0.1, treating b2 and b3 as nuisances","\n");
-signif(Score.mnr(y.m.t,y.m.s,D.m.t,D.m.s,L=c(T,F,F),b0=c(0.1)),digits=2);
+signif(Score.mnr(y.m.t,y.m.s,Z.m.t,Z.m.s,L=c(F,T,F,F),b0=c(0.1)),digits=2);
 cat("\n","Individual score test of b3 = 0, treating b1 and b2 as nuisances","\n");
-signif(Score.mnr(y.m.t,y.m.s,D.m.t,D.m.s,L=c(F,F,T)),digits=2);
+signif(Score.mnr(y.m.t,y.m.s,Z.m.t,Z.m.s,L=c(F,F,F,T)),digits=2);
 ```
 
 ```
 ## Joint score test of b1 = b2 = b3 = 0 
 ##   Score      df       p 
-## 2.5e+01 3.0e+00 1.9e-05 
+## 5.1e+01 3.0e+00 5.4e-11 
 ## 
 ##  Joint score test of b1 = b2 = 0, treating b3 as a nuisance 
 ##   Score      df       p 
-## 2.4e+01 2.0e+00 5.4e-06 
+## 5.1e+01 2.0e+00 1.0e-11 
 ## 
 ##  Joint score test of b1 = 0.1, treating b2 and b3 as nuisances 
 ## Score    df     p 
-##  1.40  1.00  0.24 
+##  0.44  1.00  0.51 
 ## 
 ##  Individual score test of b3 = 0, treating b1 and b2 as nuisances 
 ## Score    df     p 
-##  0.35  1.00  0.55
+##  0.38  1.00  0.54
 ```

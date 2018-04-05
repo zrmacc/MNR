@@ -1,5 +1,5 @@
 # Purpose: Fitting procedure for multivariate outcome regression
-# Updated: 180315
+# Updated: 180404
 
 #' @useDynLib MNR
 #' @importFrom Rcpp sourceCpp
@@ -23,54 +23,48 @@ NULL
 #'
 #' @importFrom methods new
 #' @importFrom stats coef resid
-#' @importFrom RcppEigen fastLmPure
 #' @export
 
-fit.bnr = function(y.t,y.s,Z.t,Z.s,maxit=10,eps=1e-4,report=T){
-  # Ensure matrix
-  y.t = as.matrix(y.t,nrow=nrow(Z.t));
-  y.s = as.matrix(y.s,nrow=nrow(Z.s));
-  # Observations
-  n = nrow(Z.s);
+fit.bnr = function(y.t,y.s,Z.t,Z.s,maxit=10,eps=1e-6,report=T){
+  # Dimensions
+  n = nrow(Z.t);
   p = ncol(Z.t);
   q = ncol(Z.s);
   # Initialize beta
-  M.t.0 = RcppEigen::fastLmPure(X=Z.t,y=y.t);
-  b0 = coef(M.t.0);
+  B = incP(Z.t);
+  b0 = fastMvp(B,y.t);
   # Initialize alpha
-  M.s.0 = RcppEigen::fastLmPure(X=Z.s,y=y.s)
-  a0 = coef(M.s.0);
+  A = incP(Z.s);
+  a0 = fastMvp(A,y.s);
   # Initialize sigma
-  E0 = cbind(resid(M.t.0),resid(M.s.0));
+  E0 = cbind(y.t-fastMvp(Z.t,b0),y.s-fastMvp(Z.s,a0));
   s0 = fastIP(E0,E0)/n;
   # Objective function
-  Q = function(s){-(n/2)*log(fastDet(s))};
+  Q = function(s){-n*log(fastDet(s))};
   # Initial objective
-  q0 = Q(s0);
-  # Incomplete projections
-  A.t = incP(Z.t);
-  A.s = incP(Z.s);
+  q00 = q0 = Q(s0);
   # Update wrapper
-  Update = function(b0,a0,s0){
-    Out = updateBVR(yt=y.t,ys=y.s,Zt=Z.t,Zs=Z.s,At=A.t,As=A.s,b0=b0,a0=a0,s0=s0);
+  Update = function(b,a,s){
+    Out = updateBVR(t=y.t,s=y.s,X=Z.t,Xi=Z.s,B=B,A=A,b0=b,a0=a,s0=s);
   }
   # Update interations
   for(i in 1:maxit){
-    # Initial objective
-    q0 = Q(s0);
     # Proposal
     U = Update(b0,a0,s0);
     # Final objective
     q1 = Q(U$s1);
     # Update parameters if objective increases sufficiently
-    if((q1-q0)>eps){
+    d = q1-q0;
+    if(d>eps){
+      if(report){cat("Log likelihood increment:",signif(d,2),"\n")};
+      q0 = q1;
       s0 = U$s1;
       b0 = U$b1;
       a0 = U$a1;
       E0 = U$E1;
     } else {break};
   }
-  if(report){cat(paste0(i," updates performed before tolerance limit."),"\n")};
+  if(report){cat(paste0(i-1," updates performed before tolerance limit."),"\n")};
   # Precision matrix
   L = fastInv(s0);
   # Partition precision
@@ -93,7 +87,7 @@ fit.bnr = function(y.t,y.s,Z.t,Z.s,maxit=10,eps=1e-4,report=T){
   Beta = as.numeric(b0);
   names(Beta) = colnames(Z.t);
   # Name covariance matrix
-  rownames(s0) = colnames(s0) = c("y.t","y.s");
+  rownames(s0) = colnames(s0) = c("t","s");
   # Output
   Out = new(Class="mnr",Coefficients=list("Beta"=Beta,"Alpha"=Alpha),
             Covariance=s0, Information=J, Residuals=list("Target"=eT,"Surrogate"=eS));
@@ -118,12 +112,9 @@ fit.bnr = function(y.t,y.s,Z.t,Z.s,maxit=10,eps=1e-4,report=T){
 #'
 #' @importFrom methods new
 #' @importFrom stats coef resid
-#' @importFrom RcppEigen fastLmPure
 #' @export
 
 fit.mnr = function(y.t,y.s,Z.t,Z.s,maxit=10,eps=1e-4,report=T){
-  # Ensure matrix
-  y.t = as.matrix(y.t,nrow=nrow(Z.t));
   # Observations
   n = nrow(Z.t);
   # Surrogates
@@ -132,43 +123,41 @@ fit.mnr = function(y.t,y.s,Z.t,Z.s,maxit=10,eps=1e-4,report=T){
   p = ncol(Z.t);
   q = ncol(Z.s);
   # Initialize beta
-  M.t.0 = RcppEigen::fastLmPure(X=Z.t,y=y.t);
-  b0 = coef(M.t.0);
+  B = incP(Z.t);
+  b0 = fastMvp(B,y.t);
   # Form surrogate vector
-  S = c(fastT(y.s));
+  s = c(fastT(y.s));
   # Initialize alpha
-  M.s.0 = RcppEigen::fastLmPure(X=Z.s,y=S);
-  a0 = coef(M.s.0);
+  a0 = alpha0(Z.s,s);
   # Initialize sigma
-  E0 = cbind(resid(M.t.0),matrix(resid(M.s.0),ncol=2,byrow=T));
+  E0 = cbind(y.t-fastMvp(Z.t,b0),matrix(s-fastMvp(Z.s,a0),ncol=m,byrow=T));
   s0 = fastIP(E0,E0)/n;
   # Objective function
   Q = function(s){-(n/2)*log(fastDet(s))};
   # Initial objective
   q0 = Q(s0);
-  # Incomplete projections
-  A.t = incP(Z.t);
   # Update wrapper
-  Update = function(b0,a0,s0){
-    Out = updateMNR(yt=y.t,S=S,Zt=Z.t,Zs=Z.s,At=A.t,b0=b0,a0=a0,s0=s0);
+  Update = function(b,a,s0){
+    Out = updateMNR(t=y.t,s=s,X=Z.t,Xi=Z.s,B=B,b0=b,a0=a,s0=s0);
   }
   # Update interations
   for(i in 1:maxit){
-    # Initial objective
-    q0 = Q(s0);
     # Proposal
     U = Update(b0,a0,s0);
     # Final objective
     q1 = Q(U$s1);
     # Update parameters if objective increases sufficiently
-    if((q1-q0)>eps){
+    d = q1-q0;
+    if(d>eps){
+      if(report){cat("Log likelihood increment:",signif(d,2),"\n")};
+      q0 = q1;
       s0 = U$s1;
       b0 = U$b1;
       a0 = U$a1;
       E0 = U$E1;
     } else {break};
   }
-  if(report){cat(paste0(i," updates performed before tolerance limit."),"\n")};
+  if(report){cat(paste0(i-1," updates performed before tolerance limit."),"\n")};
   # Precision matrix
   L = fastInv(s0);
   # Partition
@@ -191,7 +180,7 @@ fit.mnr = function(y.t,y.s,Z.t,Z.s,maxit=10,eps=1e-4,report=T){
   Beta = as.numeric(b0);
   names(Beta) = colnames(Z.t);
   # Name covariance matrix
-  rownames(s0) = colnames(s0) = c(colnames(y.t),colnames(y.s));
+  rownames(s0) = colnames(s0) = c("t",colnames(y.s));
   # Output
   Out = new(Class="mnr",Coefficients=list("Beta"=Beta,"Alpha"=Alpha),
             Covariance=s0, Information=J, Residuals=list("Target"=eT,"Surrogate"=eS));

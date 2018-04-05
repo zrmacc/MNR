@@ -11,9 +11,9 @@ Wald.bnr(y.t, y.s, Z.t, Z.s, L, b0, maxit = 10, eps = 1e-06)
 
 \item{y.s}{Surrogate outcome.}
 
-\item{Z.t}{Target model matrix. Include intercept and expand factors.}
+\item{Z.t}{Numeric model matrix for the target outcome.}
 
-\item{Z.s}{Surrogate model matrix. Include intercept and expand factors.}
+\item{Z.s}{Numeric model matrix for the surrogate outcome.}
 
 \item{L}{Logical vector, with as many entires as columns in the target
 model, indicating which columns of the target model are fixed under the
@@ -32,8 +32,8 @@ Wald test of \eqn{H_{0}:\beta_{1}=\beta_{10}} in the bivariate outcome model.
 \examples{
 y.t = D.bnr$y.t;
 y.s = D.bnr$y.s;
-Z.t = model.matrix(~.,data=data.frame(D.bnr$D.t));
-Z.s = model.matrix(~.,data=data.frame(D.bnr$D.s));
+Z.t = D.bnr$Z.t;
+Z.s = D.bnr$Z.s;
 # Test for an overall effect
 # Note: Null model should contain the intercept
 Wald.bnr(y.t,y.s,Z.t,Z.s,L=c(FALSE,TRUE,TRUE,TRUE));

@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{fastQF}
 \alias{fastQF}
-\title{Fast Quadratic Form}
+\title{Quadratic Form}
 \usage{
 fastQF(x, A)
 }

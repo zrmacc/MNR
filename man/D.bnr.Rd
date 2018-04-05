@@ -8,8 +8,8 @@
 \describe{ 
    \item{y.t}{Numeric vector containing the target outcome.}
    \item{y.s}{Numeric vector containing the surrogate outcome.}
-   \item{D.t}{Design matrix for the target outcome.}
-   \item{D.s}{Design matrix for the surrogate outcome.}
+   \item{Z.t}{Model matrix for the target outcome.}
+   \item{Z.s}{Model matrix for the surrogate outcome.}
    \item{Beta}{Regression coefficients used to generate the target outcome.}
    \item{Alpha}{Regression coefficients used to generate the surrogate outcome.}
 }}

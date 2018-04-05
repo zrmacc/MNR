@@ -7,33 +7,33 @@
 using namespace Rcpp;
 
 // updateBVR
-SEXP updateBVR(const Eigen::Map<Eigen::VectorXd> yt, const Eigen::Map<Eigen::VectorXd> ys, const Eigen::Map<Eigen::MatrixXd> Zt, const Eigen::Map<Eigen::MatrixXd> Zs, const Eigen::Map<Eigen::MatrixXd> At, const Eigen::Map<Eigen::MatrixXd> As, const Eigen::Map<Eigen::VectorXd> b0, const Eigen::Map<Eigen::VectorXd> a0, const Eigen::Map<Eigen::MatrixXd> s0);
-RcppExport SEXP _MNR_updateBVR(SEXP ytSEXP, SEXP ysSEXP, SEXP ZtSEXP, SEXP ZsSEXP, SEXP AtSEXP, SEXP AsSEXP, SEXP b0SEXP, SEXP a0SEXP, SEXP s0SEXP) {
+SEXP updateBVR(const Eigen::Map<Eigen::VectorXd> t, const Eigen::Map<Eigen::VectorXd> s, const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd> Xi, const Eigen::Map<Eigen::MatrixXd> B, const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::VectorXd> b0, const Eigen::Map<Eigen::VectorXd> a0, const Eigen::Map<Eigen::MatrixXd> s0);
+RcppExport SEXP _MNR_updateBVR(SEXP tSEXP, SEXP sSEXP, SEXP XSEXP, SEXP XiSEXP, SEXP BSEXP, SEXP ASEXP, SEXP b0SEXP, SEXP a0SEXP, SEXP s0SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::VectorXd> >::type yt(ytSEXP);
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::VectorXd> >::type ys(ysSEXP);
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type Zt(ZtSEXP);
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type Zs(ZsSEXP);
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type At(AtSEXP);
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type As(AsSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::VectorXd> >::type t(tSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::VectorXd> >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type Xi(XiSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type B(BSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type A(ASEXP);
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::VectorXd> >::type b0(b0SEXP);
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::VectorXd> >::type a0(a0SEXP);
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type s0(s0SEXP);
-    rcpp_result_gen = Rcpp::wrap(updateBVR(yt, ys, Zt, Zs, At, As, b0, a0, s0));
+    rcpp_result_gen = Rcpp::wrap(updateBVR(t, s, X, Xi, B, A, b0, a0, s0));
     return rcpp_result_gen;
 END_RCPP
 }
-// sKroneckerP
-SEXP sKroneckerP(const int n, const Eigen::Map<Eigen::MatrixXd> A);
-RcppExport SEXP _MNR_sKroneckerP(SEXP nSEXP, SEXP ASEXP) {
+// fastMvp
+SEXP fastMvp(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::VectorXd> b);
+RcppExport SEXP _MNR_fastMvp(SEXP ASEXP, SEXP bSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const int >::type n(nSEXP);
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type A(ASEXP);
-    rcpp_result_gen = Rcpp::wrap(sKroneckerP(n, A));
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::VectorXd> >::type b(bSEXP);
+    rcpp_result_gen = Rcpp::wrap(fastMvp(A, b));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -118,21 +118,33 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// updateMNR
-SEXP updateMNR(const Eigen::Map<Eigen::VectorXd> yt, const Eigen::Map<Eigen::VectorXd> S, const Eigen::Map<Eigen::MatrixXd> Zt, const Eigen::Map<Eigen::MatrixXd> Zs, const Eigen::Map<Eigen::MatrixXd> At, const Eigen::Map<Eigen::VectorXd> b0, const Eigen::Map<Eigen::VectorXd> a0, const Eigen::Map<Eigen::MatrixXd> s0);
-RcppExport SEXP _MNR_updateMNR(SEXP ytSEXP, SEXP SSEXP, SEXP ZtSEXP, SEXP ZsSEXP, SEXP AtSEXP, SEXP b0SEXP, SEXP a0SEXP, SEXP s0SEXP) {
+// alpha0
+SEXP alpha0(const Eigen::MatrixXd Xi, const Eigen::VectorXd s);
+RcppExport SEXP _MNR_alpha0(SEXP XiSEXP, SEXP sSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::VectorXd> >::type yt(ytSEXP);
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::VectorXd> >::type S(SSEXP);
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type Zt(ZtSEXP);
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type Zs(ZsSEXP);
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type At(AtSEXP);
+    Rcpp::traits::input_parameter< const Eigen::MatrixXd >::type Xi(XiSEXP);
+    Rcpp::traits::input_parameter< const Eigen::VectorXd >::type s(sSEXP);
+    rcpp_result_gen = Rcpp::wrap(alpha0(Xi, s));
+    return rcpp_result_gen;
+END_RCPP
+}
+// updateMNR
+SEXP updateMNR(const Eigen::Map<Eigen::VectorXd> t, const Eigen::Map<Eigen::VectorXd> s, const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd> Xi, const Eigen::Map<Eigen::MatrixXd> B, const Eigen::Map<Eigen::VectorXd> b0, const Eigen::Map<Eigen::VectorXd> a0, const Eigen::Map<Eigen::MatrixXd> s0);
+RcppExport SEXP _MNR_updateMNR(SEXP tSEXP, SEXP sSEXP, SEXP XSEXP, SEXP XiSEXP, SEXP BSEXP, SEXP b0SEXP, SEXP a0SEXP, SEXP s0SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::VectorXd> >::type t(tSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::VectorXd> >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type Xi(XiSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type B(BSEXP);
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::VectorXd> >::type b0(b0SEXP);
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::VectorXd> >::type a0(a0SEXP);
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type s0(s0SEXP);
-    rcpp_result_gen = Rcpp::wrap(updateMNR(yt, S, Zt, Zs, At, b0, a0, s0));
+    rcpp_result_gen = Rcpp::wrap(updateMNR(t, s, X, Xi, B, b0, a0, s0));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -153,7 +165,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_MNR_updateBVR", (DL_FUNC) &_MNR_updateBVR, 9},
-    {"_MNR_sKroneckerP", (DL_FUNC) &_MNR_sKroneckerP, 2},
+    {"_MNR_fastMvp", (DL_FUNC) &_MNR_fastMvp, 2},
     {"_MNR_fastT", (DL_FUNC) &_MNR_fastT, 1},
     {"_MNR_fastIP", (DL_FUNC) &_MNR_fastIP, 2},
     {"_MNR_fastInv", (DL_FUNC) &_MNR_fastInv, 1},
@@ -161,6 +173,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MNR_fastQF", (DL_FUNC) &_MNR_fastQF, 2},
     {"_MNR_incP", (DL_FUNC) &_MNR_incP, 1},
     {"_MNR_SchurC", (DL_FUNC) &_MNR_SchurC, 3},
+    {"_MNR_alpha0", (DL_FUNC) &_MNR_alpha0, 2},
     {"_MNR_updateMNR", (DL_FUNC) &_MNR_updateMNR, 8},
     {"_MNR_infoMNR", (DL_FUNC) &_MNR_infoMNR, 4},
     {NULL, NULL, 0}

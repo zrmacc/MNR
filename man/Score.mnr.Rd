@@ -4,7 +4,7 @@
 \alias{Score.mnr}
 \title{Multivariate Regression Score Test}
 \usage{
-Score.mnr(y.t, y.s, D.t, D.s, L, b0, parallel = F, maxit = 10,
+Score.mnr(y.t, y.s, Z.t, L.s, L, b0, parallel = F, maxit = 10,
   eps = 1e-06)
 }
 \arguments{
@@ -12,13 +12,12 @@ Score.mnr(y.t, y.s, D.t, D.s, L, b0, parallel = F, maxit = 10,
 
 \item{y.s}{Surrogate outcome.}
 
-\item{D.t}{Target design matrix.}
+\item{Z.t}{Numeric model matrix for the target outcome.}
 
-\item{D.s}{Surrogate design matrix.}
+\item{L.s}{List of numeric model matrices for the surrogate outcomes.}
 
 \item{L}{Logical vector, with as many entires as columns in the target
-design, indicating which columns of the target design are fixed under the
-null.}
+design, indicating which columns design are fixed under the null.}
 
 \item{b0}{Value of the regression coefficient for the selected columns under
 the null. Defaults to zero.}
@@ -36,10 +35,10 @@ Score test of \eqn{H_{0}:\beta_{1}=\beta_{10}} in the multivariate outcome model
 \examples{
 y.t = D.mnr$y.t;
 y.s = D.mnr$y.s;
-D.t = D.mnr$D.t;
-D.s = D.mnr$D.s;
+Z.t = D.mnr$Z.t;
+L.s = D.mnr$L.s;
 # Test for an overall effect
-Score.mnr(y.t,y.s,D.t,D.s,L=c(TRUE,TRUE,TRUE));
+Score.mnr(y.t,y.s,Z.t,L.s,L=c(FALSE,FALSE,TRUE,TRUE));
 # Test for the effect of \\eqn{\\beta_{3}}
-Score.mnr(y.t,y.s,D.t,D.s,L=c(FALSE,FALSE,TRUE));
+Score.mnr(y.t,y.s,Z.t,L.s,L=c(FALSE,FALSE,FALSE,TRUE));
 }

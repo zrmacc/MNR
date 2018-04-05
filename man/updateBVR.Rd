@@ -4,20 +4,20 @@
 \alias{updateBVR}
 \title{Bivariate Parameter Update}
 \usage{
-updateBVR(yt, ys, Zt, Zs, At, As, b0, a0, s0)
+updateBVR(t, s, X, Xi, B, A, b0, a0, s0)
 }
 \arguments{
-\item{yt}{Target outcome}
+\item{t}{Target outcome}
 
-\item{ys}{Surrogate outcome}
+\item{s}{Surrogate outcome}
 
-\item{Zt}{Target design}
+\item{X}{Target design}
 
-\item{Zs}{Surrogate design}
+\item{Xi}{Surrogate design}
 
-\item{At}{Target inc. proj.}
+\item{B}{Target inc. proj.}
 
-\item{As}{Surrogate inc. proj.}
+\item{A}{Surrogate inc. proj.}
 
 \item{b0}{Current beta}
 

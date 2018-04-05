@@ -4,10 +4,10 @@
 \alias{constrXi}
 \title{Construct Overall Surrogate Design}
 \usage{
-constrXi(D.s, parallel)
+constrXi(L.s, parallel)
 }
 \arguments{
-\item{D.s}{List of \eqn{k-1} design matrices}
+\item{L.s}{List of \eqn{k-1} model matrices}
 
 \item{parallel}{If true, assumes a parallel coefficient design, where each 
 secondary outcome has the same regression parameters.}

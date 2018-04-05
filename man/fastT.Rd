@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{fastT}
 \alias{fastT}
-\title{Fast Matrix Transpose}
+\title{Matrix Transpose}
 \usage{
 fastT(A)
 }

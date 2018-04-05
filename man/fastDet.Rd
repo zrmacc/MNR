@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{fastDet}
 \alias{fastDet}
-\title{Fast Matrix Determinant}
+\title{Matrix Determinant}
 \usage{
 fastDet(A)
 }

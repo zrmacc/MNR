@@ -4,7 +4,7 @@
 \alias{fit.bnr}
 \title{Fit Bivariate Outcome Model}
 \usage{
-fit.bnr(y.t, y.s, Z.t, Z.s, maxit = 10, eps = 1e-04, report = T)
+fit.bnr(y.t, y.s, Z.t, Z.s, maxit = 10, eps = 1e-06, report = T)
 }
 \arguments{
 \item{y.t}{Target outcome vector.}

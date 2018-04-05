@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{fastIP}
 \alias{fastIP}
-\title{Fast Matrix Inner Product}
+\title{Matrix Inner Product}
 \usage{
 fastIP(A, B)
 }

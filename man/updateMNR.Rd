@@ -4,18 +4,18 @@
 \alias{updateMNR}
 \title{Multivariate Parameter Update}
 \usage{
-updateMNR(yt, S, Zt, Zs, At, b0, a0, s0)
+updateMNR(t, s, X, Xi, B, b0, a0, s0)
 }
 \arguments{
-\item{yt}{Target outcome}
+\item{t}{Target outcome}
 
-\item{S}{Surrogate outcome vector}
+\item{s}{Surrogate outcome vector}
 
-\item{Zt}{Target design}
+\item{X}{Target design}
 
-\item{Zs}{Surrogate design}
+\item{Xi}{Surrogate design}
 
-\item{At}{Target inc. proj.}
+\item{B}{Target inc. proj.}
 
 \item{b0}{Current beta}
 
