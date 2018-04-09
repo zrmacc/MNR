@@ -11,7 +11,8 @@ LinkingTo:
 	Rcpp,
 	RcppEigen
 Imports:
-	methods, 
+	methods,
+	plyr, 
 	Rcpp,
 	RcppEigen,
 	stats

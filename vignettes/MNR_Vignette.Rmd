@@ -49,7 +49,7 @@ Finally, partition the regression coefficient for the target mean as $\beta = (\
 
 # Example Data
 ## Bivariate Outcome
-The list `D.bnr` contains a simulated data set for $n=1000$ subjects with bivariate normal outcomes. The target and surrogate outcomes have unit variances and correlation $\rho=0.5$. Each outcome depends on a model matrix containing an intercept and three independent, standard normal covariates. `Beta` contains the regression coefficients linking the target outcome `y.t` to the target model matrix `Z.t`. Likewise, `Alpha` contains the regression coefficients linking the surrogate outcome `y.s` to the surrogate model matrix `Z.s`.
+The list `D.bnr` contains simulated data for $n=1000$ subjects with bivariate normal outcomes. The target and surrogate outcomes have unit variances and correlation $\rho=0.5$. Each outcome depends on a model matrix containing an intercept and three independent, standard normal covariates. `Beta` contains the regression coefficients linking the target outcome `y.t` to the target model matrix `Z.t`. Likewise, `Alpha` contains the regression coefficients linking the surrogate outcome `y.s` to the surrogate model matrix `Z.s`.
 
 ```{r, eval=T}
 library(MNR);

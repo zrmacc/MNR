@@ -12,7 +12,7 @@
 
 <meta name="author" content="Zachary McCaw" />
 
-<meta name="date" content="2018-04-04" />
+<meta name="date" content="2018-04-06" />
 
 <title>Multivariate Normal Regression</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Multivariate Normal Regression</h1>
 <h4 class="author"><em>Zachary McCaw</em></h4>
-<h4 class="date"><em>2018-04-04</em></h4>
+<h4 class="date"><em>2018-04-06</em></h4>
 
 
 
@@ -110,7 +110,7 @@ x_{T,i}' &amp; 0 \\
 <h1>Example Data</h1>
 <div id="bivariate-outcome" class="section level2">
 <h2>Bivariate Outcome</h2>
-<p>The list <code>D.bnr</code> contains a simulated data set for <span class="math inline">\(n=1000\)</span> subjects with bivariate normal outcomes. The target and surrogate outcomes have unit variances and correlation <span class="math inline">\(\rho=0.5\)</span>. Each outcome depends on a model matrix containing an intercept and three independent, standard normal covariates. <code>Beta</code> contains the regression coefficients linking the target outcome <code>y.t</code> to the target model matrix <code>Z.t</code>. Likewise, <code>Alpha</code> contains the regression coefficients linking the surrogate outcome <code>y.s</code> to the surrogate model matrix <code>Z.s</code>.</p>
+<p>The list <code>D.bnr</code> contains simulated data for <span class="math inline">\(n=1000\)</span> subjects with bivariate normal outcomes. The target and surrogate outcomes have unit variances and correlation <span class="math inline">\(\rho=0.5\)</span>. Each outcome depends on a model matrix containing an intercept and three independent, standard normal covariates. <code>Beta</code> contains the regression coefficients linking the target outcome <code>y.t</code> to the target model matrix <code>Z.t</code>. Likewise, <code>Alpha</code> contains the regression coefficients linking the surrogate outcome <code>y.s</code> to the surrogate model matrix <code>Z.s</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MNR);
 <span class="co"># Target outcome</span>
 y.b.t =<span class="st"> </span>D.bnr$y.t;
