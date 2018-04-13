@@ -202,15 +202,17 @@ rScore.bnr = function(y.t,y.s,X1,X2,Z.s,maxit=10,eps=1e-6){
   eS = resid(M0,type="Surrogate");
   # Fixed information component
   I22 = vcov(M0,type="Regression",inv=F);
+  # Working vector
+  z = LTT*eT+LTS*eS;
   # Function to calculate score statistics
   aux = function(x){
     # Score vector
-    Score = fastIP(x,LTT*eT+LTS*eS);
+    Score = fastIP(x,z);
     # Test-dependent information components
     I11 = LTT*fastIP(x,x);
     I12 = cbind(LTT*fastIP(x,X2),LTS*fastIP(x,Z.s));
     # Efficient information
-    V = SchurC(I11=I11,I22=I22,I12=I12);
+    V = as.numeric(SchurC(I11=I11,I22=I22,I12=I12));
     # Score statistic
     Ts = fastQF(x=Score,A=fastInv(V));
     return(Ts);
