@@ -4,13 +4,13 @@
 \alias{alpha0}
 \title{Initialize Alpha}
 \usage{
-alpha0(Xi, s)
+alpha0(Zs, s)
 }
 \arguments{
-\item{Xi}{Surrogate design matrix}
+\item{Zs}{Surrogate design matrix}
 
 \item{s}{Surrogate outcome}
 }
 \description{
-Initialize Alpha
+Initialize \eqn{\alpha} for multivariate outcome model.
 }

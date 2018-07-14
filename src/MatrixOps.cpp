@@ -1,19 +1,30 @@
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
 
-//' Matrix vector product
+//' Matrix trace
 //'
-//' Calculates \eqn{Ab};
+//' Calculates the trace of \eqn{A}.
 //'
 //' @param A Numeric matrix.
-//' @param b Numeric vector.
 //' @export
 // [[Rcpp::export]]
-SEXP fastMvp(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::VectorXd> b){
-  const Eigen::MatrixXd B = A*b;
-  return Rcpp::wrap(B);
+SEXP tr(const Eigen::Map<Eigen::MatrixXd> A){
+  const double t = A.diagonal().sum();
+  return Rcpp::wrap(t);
 }
 
+//' Matrix matrix product
+//'
+//' Calculates \eqn{AB};
+//'
+//' @param A Numeric matrix.
+//' @param B Numeric matrix.
+//' @export
+// [[Rcpp::export]]
+SEXP fastMMp(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::MatrixXd> B){
+  const Eigen::MatrixXd C = A*B;
+  return Rcpp::wrap(C);
+}
 
 //' Matrix Transpose
 //'
@@ -73,19 +84,6 @@ SEXP fastDet(const Eigen::Map<Eigen::MatrixXd> A){
 SEXP fastQF(const Eigen::Map<Eigen::VectorXd> x, const Eigen::Map<Eigen::MatrixXd> A){
   const double q = x.transpose()*A*x;
   return Rcpp::wrap(q);
-}
-
-//' Incomplete projection
-//' 
-//' Form the incomplete projection \eqn{(A'A)^{-1}A};
-//' 
-//' @param A Numeric matrix
-//' @export
-// [[Rcpp::export]]
-
-SEXP incP(const Eigen::Map<Eigen::MatrixXd> A){
-  const Eigen::MatrixXd B = (A.transpose()*A).llt().solve(A.transpose());
-  return Rcpp::wrap(B);
 }
 
 //' Schur complement

@@ -5,165 +5,101 @@
 
 //' Initialize Alpha
 //' 
-//' @param Xi Surrogate design matrix
+//' Initialize \eqn{\alpha} for multivariate outcome model.
+//' 
+//' @param Zs Surrogate design matrix
 //' @param s Surrogate outcome
 //' @export 
 // [[Rcpp::export]]
 
-SEXP alpha0(const Eigen::MatrixXd Xi, const Eigen::VectorXd s){
-  const Eigen::VectorXd a0 = (Xi.transpose()*Xi).llt().solve(Xi.transpose()*s);
-  return Rcpp::wrap(a0);
+SEXP alpha0(const Eigen::MatrixXd Zs, const Eigen::VectorXd s){
+  const Eigen::MatrixXd A = (Zs.transpose()*Zs);
+  const Eigen::VectorXd a = A.llt().solve(Zs.transpose()*s);
+  return Rcpp::wrap(a);
 }
 
-// Target Working Vector
-// 
-// Construct target working vector, i.e. the outcome using for updating \eqn{\beta}.
-// 
-// @param t Target outcome
-// @param es Surrogate residual vector
-// @param Ltt Target precision
-// @param Lst Surrogate target precision
-Eigen::VectorXd mnrZT(const Eigen::VectorXd t, const Eigen::VectorXd es,
-                      const double Ltt, const Eigen::VectorXd Lst){
-  // Dimension
-  const int n = t.size();
-  const int k = Lst.size();
-  // Output structure
-  Eigen::VectorXd Out(n);
-  Out.setZero();
-  // Weight
-  Eigen::RowVectorXd w = Lst.transpose();
-  const Eigen::RowVectorXd W = w/Ltt;
-  // Calculate entries
-  for(int i=0; i<n; i++){
-    Out(i) = (t(i)+W*es.segment(i*k,k));
-  }
-  return Out;
-}
+//' Multivariate Normal, Update for Beta
+//' 
+//' Parameter update for multivariate outcome model.
+//' 
+//' @param s Surrogate outcome
+//' @param Zt Target design
+//' @param B Target design inner product.
+//' @param Zs Surrogate design
+//' @param b0 Initial beta
+//' @param a Current alpha
+//' @param L Current precision.
+//' @export 
+// [[Rcpp::export]]
 
-// Surrogate Working Vector
-// 
-// Constrcut srrogate working vector, i.e. the outcome using for updating \eqn{\alpha}.
-// 
-// @param t Target residual vector
-// @param s Surrogate outcome vector
-// @param Lst Surrogate target precision
-// @param Lss Surrogate precision
-Eigen::VectorXd mnrZS(const Eigen::VectorXd et, const Eigen::VectorXd s,
-                      const Eigen::VectorXd Lst, const Eigen::MatrixXd Lss){
-  // Dimension
-  const int n = et.size();
-  const int m = Lst.size();
-  // Output structure
-  Eigen::VectorXd Out(n*m);
-  Out.setZero();
-  // Loop over observations
-  for(int i=0; i<n; i++){
-    Out.segment(i*m,m) = (Lst*et(i))+(Lss*s.segment(i*m,m));
-  }
-  return Out;
-}
-
-// Update Alpha
-// 
-// Calculate \eqn{\alpha_{1}} for the multivariate outcome model. 
-// 
-// @param n Sample size
-// @param m Surrogate outcomes
-// @param zs Surrogate working vector
-// @param Xi Surrogate design
-// @param Lss Surrogate precision
-Eigen::VectorXd updateA(const int n, const int m, const Eigen::VectorXd zs,
-                        const Eigen::MatrixXd Xi, const Eigen::MatrixXd Lss){
-  // Dimension
-  const int q = Xi.cols();
-  // Weight matrix
-  Eigen::MatrixXd W(q,q);
-  W.setZero();
-  for(int i=0; i<n; i++){
-    W += (Xi.block(i*m,0,m,q).transpose())*Lss*Xi.block(i*m,0,m,q);
-  }
-  // Update alpha
-  const Eigen::VectorXd a1 = W.llt().solve(Xi.transpose()*zs);
-  return a1;
-}
-
-// Residual Matrix
-// 
-// Calculate \eqn{E} for the multivariate outcome model
-// 
-// @param m Surrogate outcomes
-// @param et Target residual
-// @param s Surrogate outcome
-// @param Xi Surrogate design
-// @param a1 Alpha
-Eigen::MatrixXd resid(const int m, const Eigen::VectorXd et, 
-                      const Eigen::VectorXd s, const Eigen::MatrixXd Xi,
-                      const Eigen::VectorXd a1){
-  // Observations
-  const int n = et.size();
-  const int q = Xi.cols();
-  // Output structure
-  Eigen::MatrixXd E(n,m+1);
-  E.setZero();
-  // Target residual
-  E.col(0) = et;
+SEXP MNRbeta(const Eigen::Map<Eigen::VectorXd> s, const Eigen::Map<Eigen::MatrixXd> Zt,
+             const Eigen::Map<Eigen::MatrixXd> B, const Eigen::Map<Eigen::MatrixXd> Zs,
+             const Eigen::Map<Eigen::VectorXd> b0, const Eigen::Map<Eigen::VectorXd> a,
+             const Eigen::Map<Eigen::MatrixXd> L){
   // Surrogate residuals
+  const Eigen::VectorXd es = (s-Zs*a);
+  // Dimensions
+  const int n = Zt.rows();
+  const int m = L.cols()-1;
+  // Partition Lambda
+  const double Ltt = L(0,0);
+  const Eigen::VectorXd Lst = L.block(1,0,m,1);
+  // Weight
+  const Eigen::RowVectorXd w = (Lst.transpose())/Ltt;
+  // Calculate weighted surrogate residuals
+  Eigen::VectorXd wes(n);
+  wes.setZero();
   for(int i=0; i<n; i++){
-    E.block(i,1,1,m) = (s.segment(i*m,m)-(Xi.block(i*m,0,m,q)*a1)).transpose();
+    wes(i) = (w*es.segment(i*m,m));
   }
-  return E;
+  // Update
+  const Eigen::VectorXd b1 = b0 + B.llt().solve(Zt.transpose()*wes);
+  return Rcpp::wrap(b1);
 }
 
-//' Multivariate Parameter Update
+//' Multivariate Normal, Update for Alpha
 //' 
 //' Parameter update for multivariate outcome model.
 //' 
 //' @param t Target outcome
-//' @param s Surrogate outcome vector
-//' @param X Target design
-//' @param Xi Surrogate design
-//' @param B Target inc. proj.
-//' @param b0 Current beta
-//' @param a0 Current alpha
-//' @param s0 Current sigma
+//' @param s Surrogate outcome
+//' @param Zt Target design
+//' @param Zs Surrogate design
+//' @param b Current beta
+//' @param a0 Initial alpha
+//' @param L Current precision
 //' @export 
 // [[Rcpp::export]]
 
-SEXP updateMNR(const Eigen::Map<Eigen::VectorXd> t, const Eigen::Map<Eigen::VectorXd> s,
-               const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd> Xi,
-               const Eigen::Map<Eigen::MatrixXd> B,
-               const Eigen::Map<Eigen::VectorXd> b0, const Eigen::Map<Eigen::VectorXd> a0,
-               const Eigen::Map<Eigen::MatrixXd> s0){
-  // Observations
-  const int n = X.rows();
-  // Surrogates
-  const int m = s0.cols()-1;
-  // Invert Sigma
-  const Eigen::MatrixXd l0 = s0.completeOrthogonalDecomposition().pseudoInverse();
+SEXP MNRalpha(const Eigen::Map<Eigen::VectorXd> t, const Eigen::Map<Eigen::VectorXd> s,
+              const Eigen::Map<Eigen::MatrixXd> Zt, const Eigen::Map<Eigen::MatrixXd> Zs, 
+              const Eigen::Map<Eigen::VectorXd> b, const Eigen::Map<Eigen::MatrixXd> L){
+  // Target residuals
+  const Eigen::VectorXd et = (t-Zt*b);
+  // Dimensions
+  const int n = Zt.rows();
+  const int m = L.cols()-1;
+  const int q = Zs.cols();
   // Partition Lambda
-  const double Ltt = l0(0,0);
-  const Eigen::VectorXd Lst = l0.block(1,0,m,1);
-  const Eigen::MatrixXd Lss = l0.block(1,1,m,m);
-  // Surrogate residual
-  const Eigen::VectorXd es = (s-Xi*a0);
-  // Calculate target working vector
-  const Eigen::VectorXd zt = mnrZT(t,es,Ltt,Lst);
-  // Update beta
-  const Eigen::VectorXd b1 = B*zt;
-  // Target residual
-  const Eigen::VectorXd et = (t-X*b1);
-  // Calculate surrogate working vector
-  const Eigen::VectorXd zs = mnrZS(et,s,Lst,Lss);
-  // Update alpha
-  const Eigen::VectorXd a1 = updateA(n,m,zs,Xi,Lss);
-  // Residual matrix
-  const Eigen::MatrixXd E = resid(m,et,s,Xi,a1);
-  // Covariance matrix
-  const Eigen::MatrixXd ip = E.transpose()*E;
-  const Eigen::MatrixXd s1 = (ip/n);
+  const Eigen::VectorXd Lst = L.block(1,0,m,1);
+  const Eigen::MatrixXd Lss = L.block(1,1,m,m);
+  // Create matrix A = Zs'Lss Zs;
+  Eigen::MatrixXd A(q,q);
+  A.setZero();
+  for(int i=0; i<n; i++){
+    A += (Zs.block(i*m,0,m,q).transpose())*Lss*Zs.block(i*m,0,m,q);
+  };
+  // Surrogate working vector
+  Eigen::VectorXd zs(n*m);
+  zs.setZero();
+  // Create (Lst*et+Lss*s)
+  for(int i=0; i<n; i++){
+    zs.segment(i*m,m) = (Lst*et(i))+(Lss*s.segment(i*m,m));
+  };
+  // Update
+  const Eigen::VectorXd a1 = A.llt().solve(Zs.transpose()*zs);
   // Output
-  return Rcpp::List::create(Rcpp::Named("b1")=b1,Rcpp::Named("a1")=a1,Rcpp::Named("s1")=s1,Rcpp::Named("E1")=E);
+  return Rcpp::wrap(a1);
 }
 
 //' Information
@@ -174,7 +110,7 @@ SEXP updateMNR(const Eigen::Map<Eigen::VectorXd> t, const Eigen::Map<Eigen::Vect
 //' @param n Observations
 //' @param A Left hand matrix
 //' @param B Right hand matrix
-//' @param L Precision
+//' @param L Precision component
 //' @export 
 // [[Rcpp::export]]
 
@@ -195,5 +131,3 @@ SEXP infoMNR(const int n, const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<
   // Output
   return Rcpp::wrap(Out);
 }
-
-

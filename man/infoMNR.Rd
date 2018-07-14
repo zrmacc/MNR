@@ -13,7 +13,7 @@ infoMNR(n, A, B, L)
 
 \item{B}{Right hand matrix}
 
-\item{L}{Precision}
+\item{L}{Precision component}
 }
 \description{
 Calculate \eqn{A'(I_{n\times n}\otimes L)B}, the general form of information matrices

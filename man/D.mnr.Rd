@@ -6,10 +6,10 @@
 \title{Simulated Data with Triivariate Normal Outcomes}
 \format{A list of vectors and matrices. 
 \describe{ 
-  \item{y.t}{Numeric vector containing the target outcome.} 
-  \item{y.s}{Numeric matrix containing the surrogate outcomes.} 
-  \item{Z.t}{Model matrix for the target outcome.} 
-  \item{L.s}{List of model matrices for the surrogate outcomes.} 
+  \item{yt}{Numeric vector containing the target outcome.} 
+  \item{Ys}{Numeric matrix containing the surrogate outcomes.} 
+  \item{Zt}{Model matrix for the target outcome.} 
+  \item{Ls}{List of model matrices for the surrogate outcomes.} 
   \item{Beta}{Regression coefficients used to generate the target outcome.} 
   \item{Alpha}{Regression coefficients used to generate the surrogate 
   outcome.} }}
@@ -19,10 +19,10 @@ D.mnr
 \description{
 Example data for 1000 subjects. The outcomes are trivariate normal with unit 
 variances and an exchangeable correlation structure, \eqn{\rho=0.5}. The 
-target and first surrogate outcomes each depend on three independent N(0,1)
-covariates, while the second surrogate outcome depends on four such
-covariates. \code{Beta} contains regression coefficients for the target
-outcome, and \code{Alpha} contains regression coefficients for the secondary
-("surrogate") outcomes.
+target and first surrogate outcomes each depend on three independent N(0,1) 
+covariates, while the second surrogate outcome depends on four such 
+covariates. \code{Beta} contains regression coefficients for the target 
+outcome, and \code{Alpha} contains regression coefficients for the surrogate
+outcomes.
 }
 \keyword{datasets}
