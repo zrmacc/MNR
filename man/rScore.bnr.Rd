@@ -7,17 +7,15 @@
 rScore.bnr(yt, ys, Zt1, Zt2, Zs, maxit = 100, eps = 1e-08, report = F)
 }
 \arguments{
-\item{yt}{Target outcome.}
+\item{yt}{Target outcome vector.}
 
-\item{ys}{Surrogate outcome.}
+\item{ys}{Surrogate outcome vector.}
 
 \item{Zt1}{Numeric matrix of covariates for the target outcome whose 
-regression coefficients are zero under the null. Only include subjects
-whose target outcome is observed.}
+regression coefficients are zero under the null.}
 
 \item{Zt2}{Numeric matrix of covariates for the target outcome whose 
-regression coefficients are unconstrained, i.e. estimated, under the null.
-Only include subjects whose target outcome is observed.}
+regression coefficients are unconstrained, i.e. estimated, under the null.}
 
 \item{Zs}{Numeric model matrix for the surrogate outcome.}
 
@@ -25,7 +23,7 @@ Only include subjects whose target outcome is observed.}
 
 \item{eps}{Minimum acceptable improvement in log likelihood.}
 
-\item{report}{Report model fitting progress?}
+\item{report}{Report model fitting progress? Default is FALSE.}
 }
 \value{
 A numeric vector of p-values, one for each column of \code{Zt1}. The
@@ -44,5 +42,5 @@ Zt2 = D.bnr$Zt;
 Zs = D.bnr$Zs;
 Zt1 = G;
 # Test each column of G for association with the target outcome
-R = rScore.bnem(yt,ys,Zt1,Zt2,Zs);
+R = rScore.bnr(yt,ys,Zt1,Zt2,Zs);
 }

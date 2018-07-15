@@ -9,6 +9,9 @@ fastDet(A)
 \arguments{
 \item{A}{Numeric matrix.}
 }
+\value{
+A scalar.
+}
 \description{
-Calculates \eqn{\det(A)}.
+Calculates the determinant of \eqn{A}.
 }

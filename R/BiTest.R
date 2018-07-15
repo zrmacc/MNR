@@ -3,11 +3,11 @@
 
 #' Bivariate Regression Score Test
 #' 
-#' Score test of \eqn{H_{0}:\beta_{1}=\beta_{10}} in the bivariate outcome
-#' model. The score test is specified using a logical vector \code{L}, with
-#' as many entries as columns in the target model matrix. The values of \code{L} 
-#' set to \code{T} are fixed at \eqn{\beta_{10}} under the null. The values of
-#' \code{L} set to \code{F} are estimated. 
+#' Score test of \eqn{H_{0}:\beta_{1}=\beta_{10}} in the bivariate outcome 
+#' model. The score test is specified using a logical vector \code{L}, with as
+#' many entries as columns in the target model matrix \code{Zt}. The values of
+#' \code{L} set to \code{T} are fixed at \eqn{\beta_{10}} under the null. The
+#' values of \code{L} set to \code{F} are estimated.
 #' 
 #' @param yt Target outcome.
 #' @param ys Surrogate outcome.
@@ -19,7 +19,7 @@
 #'   the null. Defaults to zero.
 #' @param maxit Maximum number of parameter updates.
 #' @param eps Minimum acceptable improvement in log likelihood.
-#' @param report Report model fitting progress? 
+#' @param report Report model fitting progress? Default is FALSE. 
 #'   
 #' @importFrom stats model.matrix pchisq resid vcov
 #' @export
@@ -97,18 +97,16 @@ Score.bnr = function(yt,ys,Zt,Zs,L,b10,maxit=10,eps=1e-6,report=F){
 #' adjusting for \code{Zt2}. Missing values are permitted in \code{Zt1}, 
 #' though not in the other model matrices. 
 #' 
-#' @param yt Target outcome.
-#' @param ys Surrogate outcome.
+#' @param yt Target outcome vector.
+#' @param ys Surrogate outcome vector.
 #' @param Zt1 Numeric matrix of covariates for the target outcome whose 
-#'   regression coefficients are zero under the null. Only include subjects
-#'   whose target outcome is observed.
+#'   regression coefficients are zero under the null.
 #' @param Zt2 Numeric matrix of covariates for the target outcome whose 
 #'   regression coefficients are unconstrained, i.e. estimated, under the null.
-#'   Only include subjects whose target outcome is observed.
 #' @param Zs Numeric model matrix for the surrogate outcome.
 #' @param maxit Maximum number of parameter updates.
 #' @param eps Minimum acceptable improvement in log likelihood.
-#' @param report Report model fitting progress? 
+#' @param report Report model fitting progress? Default is FALSE.  
 #'   
 #' @importFrom plyr aaply
 #' @importFrom stats model.matrix pchisq resid vcov
@@ -124,7 +122,7 @@ Score.bnr = function(yt,ys,Zt,Zs,L,b10,maxit=10,eps=1e-6,report=F){
 #' Zs = D.bnr$Zs;
 #' Zt1 = G;
 #' # Test each column of G for association with the target outcome
-#' R = rScore.bnem(yt,ys,Zt1,Zt2,Zs);
+#' R = rScore.bnr(yt,ys,Zt1,Zt2,Zs);
 
 rScore.bnr = function(yt,ys,Zt1,Zt2,Zs,maxit=100,eps=1e-8,report=F){
   # Input checks
@@ -133,7 +131,9 @@ rScore.bnr = function(yt,ys,Zt1,Zt2,Zs,maxit=100,eps=1e-8,report=F){
   if(!is.matrix(Zt1)){stop("A numeric matrix is expected for Zt1.")};
   if(!is.matrix(Zt2)){stop("A numeric matrix is expected for Zt2.")};
   if(!is.matrix(Zs)){stop("A numeric matrix is expected for Zs.")};
-  
+  # Check for missingness
+  Miss = sum(is.na(yt))+sum(is.na(ys))+sum(is.na(Zt2))+sum(is.na(Zs));
+  if(Miss>0){stop("Inputs other than Zt1 should contain no missing data.")};
   # Fit null model
   M0 = fit.bnr(yt=yt,ys=ys,Zt=Zt2,Zs=Zs,maxit=maxit,eps=eps,report=report);
   # Extract precision

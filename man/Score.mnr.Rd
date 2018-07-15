@@ -8,7 +8,9 @@ Score.mnr(yt, Ys, Zt, Ls, L, b10, parallel = F, maxit = 10, eps = 1e-06,
   report = F)
 }
 \arguments{
-\item{yt}{Target outcome.}
+\item{yt}{Target outcome vector.}
+
+\item{Ys}{Surrogate outcome matrix.}
 
 \item{Zt}{Numeric model matrix for the target outcome.}
 
@@ -28,8 +30,6 @@ secondary outcome has the same regression parameters.}
 \item{eps}{Minimum acceptable improvement in log likelihood.}
 
 \item{report}{Report model fitting progress?}
-
-\item{ys}{Surrogate outcome.}
 }
 \description{
 Score test of \eqn{H_{0}:\beta_{1}=\beta_{10}} in the multivariate outcome

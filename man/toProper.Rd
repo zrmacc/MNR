@@ -2,13 +2,16 @@
 % Please edit documentation in R/ClassDefinitions.R
 \name{toProper}
 \alias{toProper}
-\title{Convert to proper case}
+\title{Convert to Proper Case}
 \usage{
 toProper(s)
 }
 \arguments{
 \item{s}{A string.}
 }
+\value{
+A string.
+}
 \description{
-Convert to proper case
+Converts a string to proper case.
 }

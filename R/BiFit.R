@@ -1,5 +1,5 @@
 # Purpose: Fitting procedure for bivariate normal regression
-# Updated: 180713
+# Updated: 180714
 
 #' @useDynLib MNR
 #' @importFrom Rcpp sourceCpp
@@ -9,9 +9,9 @@ NULL
 #'
 #' Fit the bivariate outcome regression model.
 #' 
-#' The target and surrogate model matrices are expected in numeric format.
-#' Expand factors and interactions in advance. If an intercept is required,
-#' include a vector of constants.
+#' The target and surrogate model matrices are expected in numeric format. 
+#' Expand factors and interactions in advance. If an intercept is required, 
+#' include a vector of constants. The inputs should contain no missing values.
 #'
 #' @param yt Target outcome vector.
 #' @param ys Surrogate outcome vector. 
@@ -19,13 +19,16 @@ NULL
 #' @param Zs Surrogate model matrix.
 #' @param maxit Maximum number of parameter updates.
 #' @param eps Minimum acceptable improvement in log likelihood.
-#' @param report Report number of iterations?
+#' @param report Report fitting progress? Default is FALSE. 
 #'
 #' @importFrom methods new
 #' @importFrom stats coef resid
 #' @export
+#' @return An object of class \code{mnr} containing the fitted regression 
+#'   parameters, the estimated target-surrogate covariance matrix, the 
+#'   regression parameter information matrix, and the estimated residuals.
 
-fit.bnr = function(yt,ys,Zt,Zs,maxit=10,eps=1e-6,report=T){
+fit.bnr = function(yt,ys,Zt,Zs,maxit=100,eps=1e-8,report=T){
   # Dimensions
   n = nrow(Zt);
   # Objective function

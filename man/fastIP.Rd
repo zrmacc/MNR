@@ -11,6 +11,9 @@ fastIP(A, B)
 
 \item{B}{Numeric matrix.}
 }
+\value{
+A numeric matrix.
+}
 \description{
-Calculates \eqn{A'B}.
+Calculates the product \eqn{A'B}.
 }

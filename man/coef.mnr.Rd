@@ -11,8 +11,10 @@
 
 \item{...}{Unused.}
 
-\item{type}{Either Alpha or Beta.}
+\item{type}{Either "Beta" or "Alpha".}
 }
 \description{
-Extract Coefficients from Multivariate Regression Model
+Returns the estimated regression coefficients from a fitted \code{mnr} model. By
+default, returns \eqn{\beta}, the regression coefficients for the target
+outcome.
 }

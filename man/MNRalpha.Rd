@@ -18,9 +18,7 @@ MNRalpha(t, s, Zt, Zs, b, L)
 \item{b}{Current beta}
 
 \item{L}{Current precision}
-
-\item{a0}{Initial alpha}
 }
 \description{
-Parameter update for multivariate outcome model.
+Parameter update for \eqn{\alpha} in the multivariate outcome model.
 }

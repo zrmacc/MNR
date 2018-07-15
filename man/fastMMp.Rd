@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{fastMMp}
 \alias{fastMMp}
-\title{Matrix matrix product}
+\title{Matrix Matrix Product}
 \usage{
 fastMMp(A, B)
 }
@@ -11,6 +11,9 @@ fastMMp(A, B)
 
 \item{B}{Numeric matrix.}
 }
+\value{
+A numeric matrix.
+}
 \description{
-Calculates \eqn{AB};
+Calculates the product \eqn{AB}.
 }

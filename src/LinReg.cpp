@@ -10,12 +10,10 @@
 //' @export 
 //' 
 //' @return A list containing the following:
-//' \describe{
-//'   \item{Beta}{Regression coefficient.}
-//'   \item{Tau}{Outcome variance.}
-//'   \item{Ibb}{Information matrix for beta.}
-//'   \item{Resid}{Outcome residuals.}
-//' }
+//' \item{Beta}{Regression coefficient.}
+//' \item{Tau}{Outcome variance.}
+//' \item{Ibb}{Information matrix for beta.}
+//' \item{Resid}{Outcome residuals.}
 //' 
 // [[Rcpp::export]]
 

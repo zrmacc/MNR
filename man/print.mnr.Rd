@@ -12,5 +12,5 @@
 \item{...}{Unused.}
 }
 \description{
-Print for Multivariate Regression Model
+Print method for objects of class \code{mnr}.
 }

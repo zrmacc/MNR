@@ -16,6 +16,6 @@ infoMNR(n, A, B, L)
 \item{L}{Precision component}
 }
 \description{
-Calculate \eqn{A'(I_{n\times n}\otimes L)B}, the general form of information matrices
+Calculates \eqn{A'(I_{n\times n}\otimes L)B}, the general form of information matrices
 for the multivariate outcome model.
 }

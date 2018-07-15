@@ -22,5 +22,5 @@ MNRbeta(s, Zt, B, Zs, b0, a, L)
 \item{L}{Current precision.}
 }
 \description{
-Parameter update for multivariate outcome model.
+Parameter update for \eqn{\beta} in the multivariate outcome model.
 }

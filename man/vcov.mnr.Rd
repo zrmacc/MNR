@@ -4,18 +4,22 @@
 \alias{vcov.mnr}
 \title{Extract Covariance Matrix from Multivariate Regression Model}
 \usage{
-\method{vcov}{mnr}(object, ..., type = "Regression", inv = T)
+\method{vcov}{mnr}(object, ..., type = "Regression", inv = F)
 }
 \arguments{
 \item{object}{A \code{mnr} object.}
 
 \item{...}{Unused.}
 
-\item{type}{Either Outcome or Regression. Default is Regression.}
+\item{type}{Either "Regression" or "Outcome". Default is "Regression".}
 
-\item{inv}{Invert information matrix? Default is TRUE.}
+\item{inv}{Invert information matrix? Default is FALSE.}
+}
+\value{
+A numeric matrix.
 }
 \description{
-Returns the either the estimated covariance matrix of the outcome,
-or the information matrix of the regression coefficients.
+Returns estimated covariance matrices from a fitted \code{mnr} model. Specify
+"Regression" for the information matrix of the regression parameters. Specify
+"Outcome" for the target-surrogate covariance matrix.
 }

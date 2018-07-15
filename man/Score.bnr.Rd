@@ -25,18 +25,18 @@ the null. Defaults to zero.}
 
 \item{eps}{Minimum acceptable improvement in log likelihood.}
 
-\item{report}{Report model fitting progress?}
+\item{report}{Report model fitting progress? Default is FALSE.}
 }
 \value{
 A numeric vector containing the score statistic, the degrees of
   freedom, and a p-value estimated using the chi-square distribution.
 }
 \description{
-Score test of \eqn{H_{0}:\beta_{1}=\beta_{10}} in the bivariate outcome
-model. The score test is specified using a logical vector \code{L}, with
-as many entries as columns in the target model matrix. The values of \code{L} 
-set to \code{T} are fixed at \eqn{\beta_{10}} under the null. The values of
-\code{L} set to \code{F} are estimated.
+Score test of \eqn{H_{0}:\beta_{1}=\beta_{10}} in the bivariate outcome 
+model. The score test is specified using a logical vector \code{L}, with as
+many entries as columns in the target model matrix \code{Zt}. The values of
+\code{L} set to \code{T} are fixed at \eqn{\beta_{10}} under the null. The
+values of \code{L} set to \code{F} are estimated.
 }
 \examples{
 yt = D.bnr$yt;

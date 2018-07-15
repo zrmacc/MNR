@@ -45,7 +45,7 @@
 #' 
 #' Simulated genotypes for 1000 subjects at 1000 loci. Neither the target nor
 #' the surrogate phenotypes depend on these genotypes. The function
-#' \code{\link{rScore.bnem}} provides a way to rapidly test the target phenotype
+#' \code{\link{rScore.bnr}} provides a way to rapidly test the target phenotype
 #' for association with each locus.
 #' 
 #' @format A numeric matrix with 1000 rows and 1000 columns. 

@@ -9,6 +9,9 @@ fastInv(A)
 \arguments{
 \item{A}{Numeric matrix.}
 }
+\value{
+A numeric matrix.
+}
 \description{
-Matrix Inverse
+Calcualtes \eqn{A^{-1}}.
 }

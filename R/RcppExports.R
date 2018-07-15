@@ -3,7 +3,7 @@
 
 #' Bivariate Normal, Update for Beta
 #' 
-#' Parameter update for bivariate outcome model.
+#' Parameter update \eqn{\beta} in the bivariate outcome model.
 #' 
 #' @param s Surrogate outcome
 #' @param Zt Target design
@@ -19,7 +19,7 @@ BNRbeta <- function(s, Zt, B, Zs, b0, a, L) {
 
 #' Bivariate Normal, Update for Alpha
 #' 
-#' Parameter update for bivariate outcome model.
+#' Parameter update for \eqn{\alpha} in the bivariate outcome model.
 #' 
 #' @param t Target outcome
 #' @param Zt Target design
@@ -42,34 +42,34 @@ BNRalpha <- function(t, Zt, Zs, A, b, a0, L) {
 #' @export 
 #' 
 #' @return A list containing the following:
-#' \describe{
-#'   \item{Beta}{Regression coefficient.}
-#'   \item{Tau}{Outcome variance.}
-#'   \item{Ibb}{Information matrix for beta.}
-#'   \item{Resid}{Outcome residuals.}
-#' }
+#' \item{Beta}{Regression coefficient.}
+#' \item{Tau}{Outcome variance.}
+#' \item{Ibb}{Information matrix for beta.}
+#' \item{Resid}{Outcome residuals.}
 #' 
 fitNorm <- function(y, Z) {
     .Call('_MNR_fitNorm', PACKAGE = 'MNR', y, Z)
 }
 
-#' Matrix trace
+#' Matrix Trace
 #'
-#' Calculates the trace of \eqn{A}.
+#' Calculates the trace of a matrix \eqn{A}.
 #'
 #' @param A Numeric matrix.
 #' @export
+#' @return A scalar. 
 tr <- function(A) {
     .Call('_MNR_tr', PACKAGE = 'MNR', A)
 }
 
-#' Matrix matrix product
+#' Matrix Matrix Product
 #'
-#' Calculates \eqn{AB};
+#' Calculates the product \eqn{AB}. 
 #'
 #' @param A Numeric matrix.
 #' @param B Numeric matrix.
 #' @export
+#' @return A numeric matrix. 
 fastMMp <- function(A, B) {
     .Call('_MNR_fastMMp', PACKAGE = 'MNR', A, B)
 }
@@ -86,36 +86,41 @@ fastT <- function(A) {
 
 #' Matrix Inner Product
 #'
-#' Calculates \eqn{A'B}.
+#' Calculates the product \eqn{A'B}.
 #'
 #' @param A Numeric matrix.
 #' @param B Numeric matrix.
 #' @export
+#' @return A numeric matrix. 
 fastIP <- function(A, B) {
     .Call('_MNR_fastIP', PACKAGE = 'MNR', A, B)
 }
 
 #' Matrix Inverse
+#' 
+#' Calcualtes \eqn{A^{-1}}.
 #'
 #' @param A Numeric matrix.
 #' @export
+#' @return A numeric matrix. 
 fastInv <- function(A) {
     .Call('_MNR_fastInv', PACKAGE = 'MNR', A)
 }
 
 #' Matrix Determinant
 #'
-#' Calculates \eqn{\det(A)}.
+#' Calculates the determinant of \eqn{A}.
 #'
 #' @param A Numeric matrix.
 #' @export
+#' @return A scalar. 
 fastDet <- function(A) {
     .Call('_MNR_fastDet', PACKAGE = 'MNR', A)
 }
 
 #' Quadratic Form
 #' 
-#' Calculates \eqn{x'Ax}.
+#' Calculates the quadratic form \eqn{x'Ax}.
 #' 
 #' @param x Numeric vector.
 #' @param A Numeric matrix.
@@ -126,12 +131,13 @@ fastQF <- function(x, A) {
 
 #' Schur complement
 #'
-#' Calculates the efficient information \eqn{I_{11}-I_{12}I_{22}^{-1}I_{21}};
+#' Calculates the efficient information \eqn{I_{11}-I_{12}I_{22}^{-1}I_{21}}. 
 #'
 #' @param I11 Information of target parameter
 #' @param I22 Information of nuisance parameter
 #' @param I12 Cross information between target and nuisance parameters
 #' @export
+#' @return A numeric matrix. 
 #'
 SchurC <- function(I11, I22, I12) {
     .Call('_MNR_SchurC', PACKAGE = 'MNR', I11, I22, I12)
@@ -150,7 +156,7 @@ alpha0 <- function(Zs, s) {
 
 #' Multivariate Normal, Update for Beta
 #' 
-#' Parameter update for multivariate outcome model.
+#' Parameter update for \eqn{\beta} in the multivariate outcome model.
 #' 
 #' @param s Surrogate outcome
 #' @param Zt Target design
@@ -166,14 +172,13 @@ MNRbeta <- function(s, Zt, B, Zs, b0, a, L) {
 
 #' Multivariate Normal, Update for Alpha
 #' 
-#' Parameter update for multivariate outcome model.
+#' Parameter update for \eqn{\alpha} in the multivariate outcome model.
 #' 
 #' @param t Target outcome
 #' @param s Surrogate outcome
 #' @param Zt Target design
 #' @param Zs Surrogate design
 #' @param b Current beta
-#' @param a0 Initial alpha
 #' @param L Current precision
 #' @export 
 MNRalpha <- function(t, s, Zt, Zs, b, L) {
@@ -182,7 +187,7 @@ MNRalpha <- function(t, s, Zt, Zs, b, L) {
 
 #' Information
 #'
-#' Calculate \eqn{A'(I_{n\times n}\otimes L)B}, the general form of information matrices
+#' Calculates \eqn{A'(I_{n\times n}\otimes L)B}, the general form of information matrices
 #' for the multivariate outcome model. 
 #'
 #' @param n Observations

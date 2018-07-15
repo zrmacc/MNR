@@ -7,12 +7,19 @@
 constrXi(Ls, parallel)
 }
 \arguments{
-\item{Ls}{List of \eqn{k-1} model matrices}
+\item{Ls}{List of \eqn{(k-1)} numeric model matrices for the surrogate
+outcomes. See \code{\link{Score.mnr}}.}
 
 \item{parallel}{If true, assumes a parallel coefficient design, where each 
 surrogate outcome has the same regression parameters.}
 }
+\value{
+A numeric matrix of dimension \eqn{n(k-1)\times q}, where \eqn{n} is 
+the number of observations, \eqn{k-1} is the number of surrogate outcomes,
+and \eqn{q=q_{1}+\cdots+q_{(k-1)}} is the total number of covariates for
+all surrogate outcomes.
+}
 \description{
-Assembles the overall surrogate design from a list of design matrices for the
+Constructs the overall surrogate model matrix from a list of model matrices for the
 individual surrogate outcomes.
 }

@@ -22,5 +22,5 @@ BNRalpha(t, Zt, Zs, A, b, a0, L)
 \item{L}{Current precision}
 }
 \description{
-Parameter update for bivariate outcome model.
+Parameter update for \eqn{\alpha} in the bivariate outcome model.
 }

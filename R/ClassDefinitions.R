@@ -1,5 +1,7 @@
 #' Multivariate Regression Model
 #'
+#' Defines the object class returned by \code{\link{fit.bnr}} and \code{\link{fit.mnr}}. 
+#'
 #' @slot Coefficients Regression coefficients.
 #' @slot Covariance Outcome covariance matrix.
 #' @slot Information Information.
@@ -7,6 +9,7 @@
 #' @name mnr-class
 #' @rdname mnr-class
 #' @exportClass mnr
+
 setClass(Class="mnr",representation=representation(Coefficients="list",Covariance="matrix",Information="list",Residuals="list"));
 
 ########################
@@ -14,6 +17,8 @@ setClass(Class="mnr",representation=representation(Coefficients="list",Covarianc
 ########################
 
 #' Print for Multivariate Regression Model
+#' 
+#' Print method for objects of class \code{mnr}. 
 #'
 #' @param x A \code{mnr} object.
 #' @param ... Unused.
@@ -35,15 +40,19 @@ print.mnr = function(x,...){
 #' @param object A \code{mnr} object.
 #' @rdname mnr-method
 #' @importFrom methods show
+
 setMethod(f="show",signature=c(object="mnr"),definition=function(object){print.mnr(x=object)});
 
 ########################
 # Coef Method
 ########################
 
-#' Convert to proper case
+#' Convert to Proper Case
+#'
+#' Converts a string to proper case. 
 #'
 #' @param s A string.
+#' @return A string. 
 
 toProper = function(s){
   a = unlist(strsplit(s,split=""));
@@ -53,10 +62,14 @@ toProper = function(s){
 }
 
 #' Extract Coefficients from Multivariate Regression Model
+#' 
+#' Returns the estimated regression coefficients from a fitted \code{mnr} model. By
+#' default, returns \eqn{\beta}, the regression coefficients for the target
+#' outcome.
 #'
 #' @param object A \code{mnr} object.
 #' @param ... Unused.
-#' @param type Either Alpha or Beta.
+#' @param type Either "Beta" or "Alpha".
 #' @export
 
 coef.mnr = function(object,...,type="Beta"){
@@ -75,11 +88,15 @@ coef.mnr = function(object,...,type="Beta"){
 ########################
 
 #' Extract Residuals from Multivariate Regression Model
+#' 
+#' Returns the estimated residuals from a fitted \code{mnr} model. By default, returns
+#' the residuals for the target outcome. 
 #'
 #' @param object A \code{mnr} object.
 #' @param ... Unused.
-#' @param type Either Surrogate or Target.
+#' @param type Either "Surrogate" or "Target".
 #' @export
+#' @return A numeric vector (matrix) of residuals. 
 
 residuals.mnr = function(object,...,type="Target"){
   # Ensure first letter is capitalized
@@ -98,16 +115,18 @@ residuals.mnr = function(object,...,type="Target"){
 
 #' Extract Covariance Matrix from Multivariate Regression Model
 #'
-#' Returns the either the estimated covariance matrix of the outcome,
-#' or the information matrix of the regression coefficients. 
+#' Returns estimated covariance matrices from a fitted \code{mnr} model. Specify
+#' "Regression" for the information matrix of the regression parameters. Specify
+#' "Outcome" for the target-surrogate covariance matrix.
 #' 
 #' @param object A \code{mnr} object.
 #' @param ... Unused.
-#' @param type Either Outcome or Regression. Default is Regression.  
-#' @param inv Invert information matrix? Default is TRUE.
+#' @param type Either "Regression" or "Outcome". Default is "Regression".  
+#' @param inv Invert information matrix? Default is FALSE.
 #' @export
+#' @return A numeric matrix. 
 
-vcov.mnr = function(object,...,type="Regression",inv=T){
+vcov.mnr = function(object,...,type="Regression",inv=F){
   # Ensure proper case
   type = toProper(type);
   if(! type %in% c("Regression","Outcome")){stop("Select Regression or Outcome.")};

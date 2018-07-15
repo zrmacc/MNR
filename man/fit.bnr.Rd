@@ -4,7 +4,7 @@
 \alias{fit.bnr}
 \title{Fit Bivariate Outcome Model}
 \usage{
-fit.bnr(yt, ys, Zt, Zs, maxit = 10, eps = 1e-06, report = T)
+fit.bnr(yt, ys, Zt, Zs, maxit = 100, eps = 1e-08, report = T)
 }
 \arguments{
 \item{yt}{Target outcome vector.}
@@ -19,13 +19,18 @@ fit.bnr(yt, ys, Zt, Zs, maxit = 10, eps = 1e-06, report = T)
 
 \item{eps}{Minimum acceptable improvement in log likelihood.}
 
-\item{report}{Report number of iterations?}
+\item{report}{Report fitting progress? Default is FALSE.}
+}
+\value{
+An object of class \code{mnr} containing the fitted regression 
+  parameters, the estimated target-surrogate covariance matrix, the 
+  regression parameter information matrix, and the estimated residuals.
 }
 \description{
 Fit the bivariate outcome regression model.
 }
 \details{
-The target and surrogate model matrices are expected in numeric format.
-Expand factors and interactions in advance. If an intercept is required,
-include a vector of constants.
+The target and surrogate model matrices are expected in numeric format. 
+Expand factors and interactions in advance. If an intercept is required, 
+include a vector of constants. The inputs should contain no missing values.
 }

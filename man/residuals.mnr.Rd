@@ -11,8 +11,12 @@
 
 \item{...}{Unused.}
 
-\item{type}{Either Surrogate or Target.}
+\item{type}{Either "Surrogate" or "Target".}
+}
+\value{
+A numeric vector (matrix) of residuals.
 }
 \description{
-Extract Residuals from Multivariate Regression Model
+Returns the estimated residuals from a fitted \code{mnr} model. By default, returns
+the residuals for the target outcome.
 }

@@ -3,7 +3,7 @@
 
 //' Bivariate Normal, Update for Beta
 //' 
-//' Parameter update for bivariate outcome model.
+//' Parameter update \eqn{\beta} in the bivariate outcome model.
 //' 
 //' @param s Surrogate outcome
 //' @param Zt Target design
@@ -33,7 +33,7 @@ SEXP BNRbeta(const Eigen::Map<Eigen::VectorXd> s, const Eigen::Map<Eigen::Matrix
 
 //' Bivariate Normal, Update for Alpha
 //' 
-//' Parameter update for bivariate outcome model.
+//' Parameter update for \eqn{\alpha} in the bivariate outcome model.
 //' 
 //' @param t Target outcome
 //' @param Zt Target design

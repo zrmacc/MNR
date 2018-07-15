@@ -1,25 +1,27 @@
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
 
-//' Matrix trace
+//' Matrix Trace
 //'
-//' Calculates the trace of \eqn{A}.
+//' Calculates the trace of a matrix \eqn{A}.
 //'
 //' @param A Numeric matrix.
 //' @export
+//' @return A scalar. 
 // [[Rcpp::export]]
 SEXP tr(const Eigen::Map<Eigen::MatrixXd> A){
   const double t = A.diagonal().sum();
   return Rcpp::wrap(t);
 }
 
-//' Matrix matrix product
+//' Matrix Matrix Product
 //'
-//' Calculates \eqn{AB};
+//' Calculates the product \eqn{AB}. 
 //'
 //' @param A Numeric matrix.
 //' @param B Numeric matrix.
 //' @export
+//' @return A numeric matrix. 
 // [[Rcpp::export]]
 SEXP fastMMp(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::MatrixXd> B){
   const Eigen::MatrixXd C = A*B;
@@ -40,11 +42,12 @@ SEXP fastT(const Eigen::Map<Eigen::MatrixXd> A){
 
 //' Matrix Inner Product
 //'
-//' Calculates \eqn{A'B}.
+//' Calculates the product \eqn{A'B}.
 //'
 //' @param A Numeric matrix.
 //' @param B Numeric matrix.
 //' @export
+//' @return A numeric matrix. 
 // [[Rcpp::export]]
 SEXP fastIP(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::MatrixXd> B){
   const Eigen::MatrixXd AtB = (A.transpose() * B);
@@ -52,9 +55,12 @@ SEXP fastIP(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::MatrixX
 }
 
 //' Matrix Inverse
+//' 
+//' Calcualtes \eqn{A^{-1}}.
 //'
 //' @param A Numeric matrix.
 //' @export
+//' @return A numeric matrix. 
 // [[Rcpp::export]]
 SEXP fastInv(const Eigen::Map<Eigen::MatrixXd> A){
   const Eigen::MatrixXd Ai = A.completeOrthogonalDecomposition().pseudoInverse();
@@ -63,10 +69,11 @@ SEXP fastInv(const Eigen::Map<Eigen::MatrixXd> A){
 
 //' Matrix Determinant
 //'
-//' Calculates \eqn{\det(A)}.
+//' Calculates the determinant of \eqn{A}.
 //'
 //' @param A Numeric matrix.
 //' @export
+//' @return A scalar. 
 // [[Rcpp::export]]
 SEXP fastDet(const Eigen::Map<Eigen::MatrixXd> A){
   const double d = A.determinant();
@@ -75,7 +82,7 @@ SEXP fastDet(const Eigen::Map<Eigen::MatrixXd> A){
 
 //' Quadratic Form
 //' 
-//' Calculates \eqn{x'Ax}.
+//' Calculates the quadratic form \eqn{x'Ax}.
 //' 
 //' @param x Numeric vector.
 //' @param A Numeric matrix.
@@ -88,12 +95,13 @@ SEXP fastQF(const Eigen::Map<Eigen::VectorXd> x, const Eigen::Map<Eigen::MatrixX
 
 //' Schur complement
 //'
-//' Calculates the efficient information \eqn{I_{11}-I_{12}I_{22}^{-1}I_{21}};
+//' Calculates the efficient information \eqn{I_{11}-I_{12}I_{22}^{-1}I_{21}}. 
 //'
 //' @param I11 Information of target parameter
 //' @param I22 Information of nuisance parameter
 //' @param I12 Cross information between target and nuisance parameters
 //' @export
+//' @return A numeric matrix. 
 //'
 // [[Rcpp::export]]
 SEXP SchurC(const Eigen::Map<Eigen::MatrixXd> I11, const Eigen::Map<Eigen::MatrixXd> I22,

@@ -3,11 +3,11 @@
 
 #' Fit Multivariate Outcome Model
 #'
-#' Fit the multivariate outcome regression model.
+#' Fits the multivariate outcome regression model.
 #' 
-#' The target and surrogate model matrices are expected in numeric format.
-#' Expand factors and interactions in advance. If an intercept is required,
-#' include a vector of constants.
+#' The target and surrogate model matrices are expected in numeric format. 
+#' Expand factors and interactions in advance. If an intercept is required, 
+#' include a vector of constants. The inputs should contain no missing values.
 #'
 #' @param yt Target outcome vector.
 #' @param Ys Surrogate outcome matrix. 
@@ -15,11 +15,14 @@
 #' @param Zs Surrogate model matrix.
 #' @param maxit Maximum number of parameter updates.
 #' @param eps Minimum acceptable improvement in log likelihood.
-#' @param report Report number of iterations?
+#' @param report Report fitting progress? Default is FALSE. 
 #'
 #' @importFrom methods new
 #' @importFrom stats coef resid
 #' @export
+#' @return An object of class \code{mnr} containing the fitted regression 
+#'   parameters, the estimated target-surrogate covariance matrix, the 
+#'   regression parameter information matrix, and the estimated residuals.
 
 fit.mnr = function(yt,Ys,Zt,Zs,maxit=10,eps=1e-6,report=T){
   # Dimensions

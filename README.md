@@ -14,27 +14,20 @@ output:
 
 # Contents
 
-* [Setting](#setting)
+* [Introduction](#introduction)
 * [Example Data](#example-data)
-* [Bivariate Outcome Regression](#bivariate-outcome-regression)
-* [Multivariate Outcome Regression](#multivariate-outcome-regression)
+* [Bivariate Outcome Score Test](#bivariate-outcome-score-test)
+* [Multivariate Outcome Score Test](#multivariate-outcome-score-test)
 
-# Setting
+# Introduction
 
-Suppose that a continuous response vector $y_{i}\in\mathbb{R}^{k}$ is observed for each of $n$ subjects. Partition the response vector as $y_{i} = (t_{i},s_{i})$. The first component $t_{i}\in\mathbb{R}^{1}$ is the (scalar) outcome of primary interest, or *target* outcome. The second component $s_{i}$ is the (potentially vectoral) outcome of secondary interest, or *surrogate* outcome. For example, suppose $t_{i}$ is the gold-standard measurement, and $s_{i}$ a collection of one or more surrogate measurements. 
+## Overview
 
-Regression models are specified for the target $\mu_{T,i} = x_{i}'\beta$ and surrogate $\mu_{S,i} = \Xi_{i}\alpha$ means. Here $x_{i}$ is a $p\times 1$ vector of covariates for the target mean, and $\Xi_{i}$ is a $(k-1)\times q$ matrix of covariates for the surrogate mean. Collect $x_{i}$ and $\Xi_{i}$ into the subject-specific design matrix $Z_{i}$. The overall regression model is:
-$$
-\mu_{i} \equiv \binom{\mu_{T,i}}{\mu_{S,i}} = \left(
-\begin{array}{c c}
-x_{i}' & 0 \\
-0 & \Xi_{i}
-\end{array}
-\right)
-\binom{\beta}{\alpha} \equiv Z_{i}\gamma
-$$
+Suppose that multiple continuous outcomes are observed for each subject. One outcome is designated as being of primary interest. Call this the *target* outcome. The remaining *surrogate* outcomes are of secondary interest, but are thought to covary with the target outcome. This package leverages the covariation between the target and surrogate outcomes in order to improve inference on the target outcome. Specifically, the vector of target and surrogate outcomes is taken to follow a multivariate normal distribution. Regression models are specified for the target and surrogate outcomes. Each outcome is allowed its own regression model. The covariance matrix of the target and surrogate outcomes is left unstructured. Score tests are provided for testing whether an arbitrary (sub)set of the target outcome regression parameters are equal to some reference value. 
 
-Conditional on covariates, the response vector $y_{i}\in\mathbb{R}^{k}$ is taken as multivariate normal:
+## Model
+
+Let $y_{i}\in\mathbb{R}^{k}$ denote a continuous response vector observed for each of $n$ subjects. Partition the response vector as $y_{i} = (t_{i},s_{i})$. The first component $t_{i}\in\mathbb{R}^{1}$ is the *target* outcome, while the second component $s_{i}\in\mathbb{R}^{k-1}$ contains the *surrogate* outcomes. For example, $t_{i}$ might represent the gold-standard measurement, and $s_{i}$ a collection of one or more surrogate measurements. Conditional on covariates, the overall response vector $y_{i}\in\mathbb{R}^{k}$ is taken as multivariate normal, with an unstructured covariance matrix: 
 
 $$
 y_{i}|Z_{i} \sim N \binom{\mu_{T,i}}{\mu_{S,i}}, \left(
@@ -45,11 +38,23 @@ y_{i}|Z_{i} \sim N \binom{\mu_{T,i}}{\mu_{S,i}}, \left(
 \right)
 $$
 
-Finally, partition the regression coefficient for the target mean as $\beta = (\beta_{1},\beta_{2})$. This package provides score tests for assessing $H_{0}:\beta_{1}=\beta_{10}$. The advantage of jointly modeling the target and surrogate outcomes is improved power for performing inference on the target mean model.
+Regression models are specified for the target $\mu_{T,i} = x_{i}'\beta$ and surrogate $\mu_{S,i} = \Xi_{i}\alpha$ means. Here $x_{i}$ is a $p\times 1$ vector of covariates for the target mean, and $\Xi_{i}$ is a $(k-1)\times q$ matrix of covariates for the surrogate mean. $\beta$ is the target regression parameter, while $\alpha$ is the surrogate regression parameter. Collect $x_{i}$ and $\Xi_{i}$ into the subject-specific design matrix $Z_{i}$. The overall regression model is:
+$$
+\mu_{i} \equiv \binom{\mu_{T,i}}{\mu_{S,i}} = \left(
+\begin{array}{c c}
+x_{i}' & 0 \\
+0 & \Xi_{i}
+\end{array}
+\right)
+\binom{\beta}{\alpha} \equiv Z_{i}\gamma
+$$
+
+Finally, partition the target regression parameter as $\beta = (\beta_{1},\beta_{2})$. This package provides score tests for assessing $H_{0}:\beta_{1}=\beta_{10}$.
 
 # Example Data
-## Bivariate Outcome
-The list `D.bnr` contains simulated data for $n=1000$ subjects with bivariate normal outcomes. The target `yt` and surrogate `ys` outcomes have unit variances and correlation $\rho=0.5$. Each outcome depends on a model matrix containing an intercept and three independent, standard normal covariates. The model matrix for the target outcome is `Zt`, and the model matrix for the surrogate outcome is `Zs`. `Beta` contains the regression coefficients for the target mean model, and `Alpha` contains the regression coefficients for the surrogate mean model. 
+## Bivariate Outcome Data
+
+The list `D.bnr` contains simulated data for $n=1000$ subjects with bivariate normal outcomes. The target `yt` and surrogate `ys` outcomes each have unit variance, and the target-surrogate correlation is $\rho=0.5$. The target and surrogate means each depend on an intercept and three independent, standard normal covariates. The model matrix for the target outcome is `Zt`, and the model matrix for the surrogate outcome is `Zs`. `Beta` contains the true regression coefficients for the target mean, and `Alpha` contains the true regression coefficients for the surrogate mean.  
 
 
 ```r
@@ -113,8 +118,9 @@ show(D.bnr$Alpha);
 ##   a0   a1   a2   a3 
 ##  1.0 -0.1 -0.1 -0.1
 ```
-## Trivariate Outcome
-The list `D.mnr` contains a simulated data set for $n=1000$ subjects with trivariate normal outcomes. The target `yt` and surrogate `Ys` outcomes have unit variances, and an exchangeable correlation structure, with $\rho=0.5$. The target and first surrogate outcomes each depend on three independent, standard normal covariates. The second surrogate outcome depends on four such covariates. The model matrix for the target outcome is `Zt`. The list `Ls` contains two model matrices. The first, `Xi1` is an $1000\times 4$ model matrix for the first surrogate outcome, consistening of an intercept and the three covariates. The second, `Xi2` is an $1000\times 5$ model matrix for the second surrogate outcome, consisting of an intercept and the four covariates. The overall surrogate model matrix `Zs` is generated within the testing function. By default, each surrogate outcome is permitted its own regression parameters. To fit a *parallel coefficient model*, in which the surrogates share a common set of regression coefficients, specify `parallel=T` during hypothesis testing. Fitting a parallel coefficient model requires that each design matrix has the same columns. `Beta` contains the regression coefficients for the target mean model, and `Alpha` contains the regression coefficients for the surrogate mean models.
+## Trivariate Outcome Data
+
+The list `D.mnr` contains a simulated data set for $n=1000$ subjects with trivariate normal outcomes. The target `yt` and surrogate `Ys` outcomes each have unit variances. The target-surrogate correlation structure is exchangeable; each pair of outcomes has correlation $\rho=0.5$. The target and first surrogate means each depend on an intercept and three independent, standard normal covariates. The second surrogate mean depends on an intercept and four such covariates. The model matrix for the target outcome is `Zt`. The list `Ls` contains two model matrices, one for each surrogate outcome. The first, `Xi1` is an $1000\times 4$ model matrix for the first surrogate outcome. The second, `Xi2` is an $1000\times 5$ model matrix for the second surrogate outcome. The overall surrogate model matrix `Zs` is generated within the testing function. By default, each surrogate outcome is permitted its own regression parameters. To fit a *parallel coefficient model*, in which the surrogates share a common set of regression coefficients, specify `parallel=T` during hypothesis testing. Fitting a parallel coefficient model requires that each design matrix has the same number of columns. `Beta` contains the true regression coefficients for the target mean, and `Alpha` contains the true regression coefficients for the surrogate mean. 
 
 
 ```r
@@ -137,6 +143,7 @@ cat("Surrogate model matrices:","\n");
 head(Ls$Xi1);
 cat("\n");
 head(Ls$Xi2);
+cat("\n");
 cat("Target regression parameters:","\n");
 show(D.mnr$Beta);
 cat("\n");
@@ -183,6 +190,7 @@ show(D.mnr$Alpha);
 ## [4,]      1 -0.07328819 -1.7535199 -1.11290174 -0.8265508
 ## [5,]      1 -2.00706806 -0.8361248 -0.03223253  0.2806040
 ## [6,]      1  0.71148498  1.1797593 -2.23657957 -0.4730092
+## 
 ## Target regression parameters: 
 ##   b0   b1   b2   b3 
 ## -1.0  0.1  0.1  0.0 
@@ -193,10 +201,12 @@ show(D.mnr$Alpha);
 ```
 
 ## Formatting Assumptions
-The target outcome `yt` is a numeric vector of length $n$. In the case of a single surrogate, `ys` is a numeric vector of length $n$. In the case of multiple surrogates, `Ys` is an $n\times(k-1)$ numeric matrix. The target model `Zt` is an $n\times p$ numeric matrix. In the case of a single surrogate, `Zs` is an $n\times q$ numeric matrix. In the case of multiple surrogates, $Ls$ is a list of numeric matrices, each with $n$ rows. In the case of a parallel coefficient model, each matrix in $Ls$ must additionally have the same number of columns $q$. All factors and interactions must have been expanded in advance. None of the inputs should contain missing data. 
 
-# Bivariate Outcome Regression
-The case of a single surrogate is implemented separately from the case of multiple surrogates because the fitting procedure is faster in the former. The following demonstrates various score tests possible using the example data. The first is an overall test of $H_{0}:\beta_{1}=\beta_{2}=\beta_{3}=0$, which is false. The second assesses $H_{0}:\beta_{1}=\beta_{2}=0$, which is again false, treating $\beta_{3}$ as a nuisance. The third considers $H_{0}:\beta_{1}=0.1$, which is in fact true, treating $\beta_{2}$ and $\beta_{3}$ as nuisances. The final considers $H_{0}:\beta_{3}=0$, which is again true, treating $\beta_{1}$ and $\beta_{2}$ as nuisances. All models include an intercept.
+The target outcome `yt` is a numeric vector of length $n$. In the case of a single surrogate, `ys` is a numeric vector of length $n$. In the case of multiple surrogates, `Ys` is an $n\times(k-1)$ numeric matrix. The target model `Zt` is an $n\times p$ numeric matrix. In the case of a single surrogate, `Zs` is an $n\times q$ numeric matrix. In the case of multiple surrogates, $Ls$ is a list of numeric matrices, each with $n$ rows. In the case of a parallel coefficient model, each matrix in $Ls$ must additionally have the same number of columns. All factors and interactions must have been expanded in advance. None of the inputs should contain missing values. 
+
+# Bivariate Outcome Score Test
+
+The case of a single surrogate was implemented separately from the general case because it is possible to expedite the fitting procedure. The following demonstrates various score tests possible using the example data. The first is an overall test of $H_{0}:\beta_{1}=\beta_{2}=\beta_{3}=0$, which is false. The second assesses $H_{0}:\beta_{1}=\beta_{2}=0$, which is again false, treating $\beta_{3}$ as a nuisance. The third considers $H_{0}:\beta_{1}=0.1$, which is in fact true, treating $\beta_{2}$ and $\beta_{3}$ as nuisances. The final considers $H_{0}:\beta_{3}=0$, which is again true, treating $\beta_{1}$ and $\beta_{2}$ as nuisances. All models include an intercept.
 
 
 ```r
@@ -205,6 +215,9 @@ yt = D.bnr$yt;
 ys = D.bnr$ys;
 Zt = D.bnr$Zt;
 Zs = D.bnr$Zs;
+cat("True regression coefficients:","\n");
+show(D.bnr$Beta);
+cat("\n");
 cat("Joint score test of b1 = b2 = b3 = 0","\n");
 signif(Score.bnr(yt,ys,Zt,Zs,L=c(F,T,T,T)),digits=2);
 cat("\n","Joint score test of b1 = b2 = 0, treating b3 as a nuisance","\n");
@@ -216,6 +229,10 @@ signif(Score.bnr(yt,ys,Zt,Zs,L=c(F,F,F,T)),digits=2);
 ```
 
 ```
+## True regression coefficients: 
+##   b0   b1   b2   b3 
+## -1.0  0.1  0.1  0.0 
+## 
 ## Joint score test of b1 = b2 = b3 = 0 
 ##   Score      df       p 
 ## 1.7e+01 3.0e+00 5.9e-04 
@@ -233,7 +250,8 @@ signif(Score.bnr(yt,ys,Zt,Zs,L=c(F,F,F,T)),digits=2);
 ##  0.19  1.00  0.67
 ```
 
-# Trivariate Outcome Regression
+# Multivariate Outcome Score Test
+
 Hypothesis testing for two or more surrogate outcomes is analogous to the bivariate case. The same hypothesis tests discussed above are repeated for the trivariate outcome model. 
 
 
@@ -243,6 +261,9 @@ yt = D.mnr$yt;
 Ys = D.mnr$Ys;
 Zt = D.mnr$Zt;
 Ls = D.mnr$Ls;
+cat("True regression coefficients:","\n");
+show(D.mnr$Beta);
+cat("\n");
 cat("Joint score test of b1 = b2 = b3 = 0","\n");
 signif(Score.mnr(yt,Ys,Zt,Ls,L=c(F,T,T,T)),digits=2);
 cat("\n","Joint score test of b1 = b2 = 0, treating b3 as a nuisance","\n");
@@ -254,6 +275,10 @@ signif(Score.mnr(yt,Ys,Zt,Ls,L=c(F,F,F,T)),digits=2);
 ```
 
 ```
+## True regression coefficients: 
+##   b0   b1   b2   b3 
+## -1.0  0.1  0.1  0.0 
+## 
 ## Joint score test of b1 = b2 = b3 = 0 
 ##   Score      df       p 
 ## 5.1e+01 3.0e+00 5.4e-11 

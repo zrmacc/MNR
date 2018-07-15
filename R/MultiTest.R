@@ -7,13 +7,18 @@
 
 #' Construct Overall Surrogate Design
 #' 
-#' Assembles the overall surrogate design from a list of design matrices for the
+#' Constructs the overall surrogate model matrix from a list of model matrices for the
 #' individual surrogate outcomes.
 #' 
-#' @param Ls List of \eqn{k-1} model matrices
+#' @param Ls List of \eqn{(k-1)} numeric model matrices for the surrogate
+#'   outcomes. See \code{\link{Score.mnr}}.
 #' @param parallel If true, assumes a parallel coefficient design, where each 
 #'   surrogate outcome has the same regression parameters.
 #' @export
+#' @return A numeric matrix of dimension \eqn{n(k-1)\times q}, where \eqn{n} is 
+#' the number of observations, \eqn{k-1} is the number of surrogate outcomes,
+#' and \eqn{q=q_{1}+\cdots+q_{(k-1)}} is the total number of covariates for
+#' all surrogate outcomes.   
 
 constrXi = function(Ls,parallel){
   # Number of surrogates
@@ -93,8 +98,8 @@ constrXi = function(Ls,parallel){
 #'  must have the same number of columns as well.
 #' }
 #' 
-#' @param yt Target outcome.
-#' @param ys Surrogate outcome.
+#' @param yt Target outcome vector.
+#' @param Ys Surrogate outcome matrix.
 #' @param Zt Numeric model matrix for the target outcome.
 #' @param Ls List of numeric model matrices for the surrogate outcomes. 
 #' @param L Logical vector, with as many entires as columns in the target
@@ -131,7 +136,7 @@ Score.mnr = function(yt,Ys,Zt,Ls,L,b10,parallel=F,maxit=10,eps=1e-6,report=F){
   if(sum(L)==0){stop("At least 1 entry of L should be TRUE.")};
   if(sum(L)==length(L)){stop("At least 1 entry of L should be FALSE.")};
   # Check for missingness
-  Miss = sum(is.na(yt))+sum(is.na(Ys))+sum(is.na(Zt))+sum(is.na(Zs));
+  Miss = sum(is.na(yt))+sum(is.na(Ys))+sum(is.na(Zt))+sum(is.na(Ls));
   if(Miss>0){stop("Inputs should contain no missing data.")};
   # Degrees of freedom
   df = sum(L);

@@ -13,12 +13,10 @@ fitNorm(y, Z)
 }
 \value{
 A list containing the following:
-\describe{
-  \item{Beta}{Regression coefficient.}
-  \item{Tau}{Outcome variance.}
-  \item{Ibb}{Information matrix for beta.}
-  \item{Resid}{Outcome residuals.}
-}
+\item{Beta}{Regression coefficient.}
+\item{Tau}{Outcome variance.}
+\item{Ibb}{Information matrix for beta.}
+\item{Resid}{Outcome residuals.}
 }
 \description{
 Fits the standard OLS model.

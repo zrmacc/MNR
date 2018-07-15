@@ -13,6 +13,9 @@ SchurC(I11, I22, I12)
 
 \item{I12}{Cross information between target and nuisance parameters}
 }
+\value{
+A numeric matrix.
+}
 \description{
-Calculates the efficient information \eqn{I_{11}-I_{12}I_{22}^{-1}I_{21}};
+Calculates the efficient information \eqn{I_{11}-I_{12}I_{22}^{-1}I_{21}}.
 }

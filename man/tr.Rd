@@ -2,13 +2,16 @@
 % Please edit documentation in R/RcppExports.R
 \name{tr}
 \alias{tr}
-\title{Matrix trace}
+\title{Matrix Trace}
 \usage{
 tr(A)
 }
 \arguments{
 \item{A}{Numeric matrix.}
 }
+\value{
+A scalar.
+}
 \description{
-Calculates the trace of \eqn{A}.
+Calculates the trace of a matrix \eqn{A}.
 }

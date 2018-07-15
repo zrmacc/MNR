@@ -22,5 +22,5 @@ BNRbeta(s, Zt, B, Zs, b0, a, L)
 \item{L}{Current precision.}
 }
 \description{
-Parameter update for bivariate outcome model.
+Parameter update \eqn{\beta} in the bivariate outcome model.
 }

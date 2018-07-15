@@ -20,7 +20,7 @@ SEXP alpha0(const Eigen::MatrixXd Zs, const Eigen::VectorXd s){
 
 //' Multivariate Normal, Update for Beta
 //' 
-//' Parameter update for multivariate outcome model.
+//' Parameter update for \eqn{\beta} in the multivariate outcome model.
 //' 
 //' @param s Surrogate outcome
 //' @param Zt Target design
@@ -59,14 +59,13 @@ SEXP MNRbeta(const Eigen::Map<Eigen::VectorXd> s, const Eigen::Map<Eigen::Matrix
 
 //' Multivariate Normal, Update for Alpha
 //' 
-//' Parameter update for multivariate outcome model.
+//' Parameter update for \eqn{\alpha} in the multivariate outcome model.
 //' 
 //' @param t Target outcome
 //' @param s Surrogate outcome
 //' @param Zt Target design
 //' @param Zs Surrogate design
 //' @param b Current beta
-//' @param a0 Initial alpha
 //' @param L Current precision
 //' @export 
 // [[Rcpp::export]]
@@ -104,7 +103,7 @@ SEXP MNRalpha(const Eigen::Map<Eigen::VectorXd> t, const Eigen::Map<Eigen::Vecto
 
 //' Information
 //'
-//' Calculate \eqn{A'(I_{n\times n}\otimes L)B}, the general form of information matrices
+//' Calculates \eqn{A'(I_{n\times n}\otimes L)B}, the general form of information matrices
 //' for the multivariate outcome model. 
 //'
 //' @param n Observations

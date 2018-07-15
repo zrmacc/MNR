@@ -5,7 +5,7 @@
 \alias{mnr-class}
 \title{Multivariate Regression Model}
 \description{
-Multivariate Regression Model
+Defines the object class returned by \code{\link{fit.bnr}} and \code{\link{fit.mnr}}.
 }
 \section{Slots}{
 
