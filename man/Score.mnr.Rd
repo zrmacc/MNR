@@ -4,7 +4,7 @@
 \alias{Score.mnr}
 \title{Multivariate Regression Score Test}
 \usage{
-Score.mnr(yt, Ys, Zt, Ls, L, b10, parallel = F, maxit = 10, eps = 1e-06,
+Score.mnr(yt, Ys, Zt, Ls, L, b10, parallel = F, maxit = 100, eps = 1e-06,
   report = F)
 }
 \arguments{

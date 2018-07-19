@@ -12,7 +12,7 @@
 
 <meta name="author" content="Zachary McCaw" />
 
-<meta name="date" content="2018-07-14" />
+<meta name="date" content="2018-07-19" />
 
 <title>Hypothesis Testing in Multivariate Normal Regression</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Hypothesis Testing in Multivariate Normal Regression</h1>
 <h4 class="author"><em>Zachary McCaw</em></h4>
-<h4 class="date"><em>2018-07-14</em></h4>
+<h4 class="date"><em>2018-07-19</em></h4>
 
 
 
@@ -269,7 +269,7 @@ Zs =<span class="st"> </span>D.bnr$Zs;
 <span class="kw">signif</span>(<span class="kw">Score.bnr</span>(yt,ys,Zt,Zs,<span class="dt">L=</span><span class="kw">c</span>(F,T,T,T)),<span class="dt">digits=</span><span class="dv">2</span>);
 <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,<span class="st">&quot;Joint score test of b1 = b2 = 0, treating b3 as a nuisance&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
 <span class="kw">signif</span>(<span class="kw">Score.bnr</span>(yt,ys,Zt,Zs,<span class="dt">L=</span><span class="kw">c</span>(F,T,T,F)),<span class="dt">digits=</span><span class="dv">2</span>);
-<span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,<span class="st">&quot;Joint score test of b1 = 0.1, treating b2 and b3 as nuisances&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
+<span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,<span class="st">&quot;Individual score test of b1 = 0.1, treating b2 and b3 as nuisances&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
 <span class="kw">signif</span>(<span class="kw">Score.bnr</span>(yt,ys,Zt,Zs,<span class="dt">L=</span><span class="kw">c</span>(F,T,F,F),<span class="dt">b10=</span><span class="kw">c</span>(<span class="fl">0.1</span>)),<span class="dt">digits=</span><span class="dv">2</span>);
 <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,<span class="st">&quot;Individual score test of b3 = 0, treating b1 and b2 as nuisances&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
 <span class="kw">signif</span>(<span class="kw">Score.bnr</span>(yt,ys,Zt,Zs,<span class="dt">L=</span><span class="kw">c</span>(F,F,F,T)),<span class="dt">digits=</span><span class="dv">2</span>);</code></pre></div>
@@ -285,7 +285,7 @@ Zs =<span class="st"> </span>D.bnr$Zs;
 ##   Score      df       p 
 ## 1.7e+01 2.0e+00 1.8e-04 
 ## 
-##  Joint score test of b1 = 0.1, treating b2 and b3 as nuisances 
+##  Individual score test of b1 = 0.1, treating b2 and b3 as nuisances 
 ## Score    df     p 
 ##   1.6   1.0   0.2 
 ## 
@@ -308,7 +308,7 @@ Ls =<span class="st"> </span>D.mnr$Ls;
 <span class="kw">signif</span>(<span class="kw">Score.mnr</span>(yt,Ys,Zt,Ls,<span class="dt">L=</span><span class="kw">c</span>(F,T,T,T)),<span class="dt">digits=</span><span class="dv">2</span>);
 <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,<span class="st">&quot;Joint score test of b1 = b2 = 0, treating b3 as a nuisance&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
 <span class="kw">signif</span>(<span class="kw">Score.mnr</span>(yt,Ys,Zt,Ls,<span class="dt">L=</span><span class="kw">c</span>(F,T,T,F)),<span class="dt">digits=</span><span class="dv">2</span>);
-<span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,<span class="st">&quot;Joint score test of b1 = 0.1, treating b2 and b3 as nuisances&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
+<span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,<span class="st">&quot;Individual score test of b1 = 0.1, treating b2 and b3 as nuisances&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
 <span class="kw">signif</span>(<span class="kw">Score.mnr</span>(yt,Ys,Zt,Ls,<span class="dt">L=</span><span class="kw">c</span>(F,T,F,F),<span class="dt">b10=</span><span class="kw">c</span>(<span class="fl">0.1</span>)),<span class="dt">digits=</span><span class="dv">2</span>);
 <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>,<span class="st">&quot;Individual score test of b3 = 0, treating b1 and b2 as nuisances&quot;</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
 <span class="kw">signif</span>(<span class="kw">Score.mnr</span>(yt,Ys,Zt,Ls,<span class="dt">L=</span><span class="kw">c</span>(F,F,F,T)),<span class="dt">digits=</span><span class="dv">2</span>);</code></pre></div>
@@ -324,9 +324,9 @@ Ls =<span class="st"> </span>D.mnr$Ls;
 ##   Score      df       p 
 ## 5.1e+01 2.0e+00 1.0e-11 
 ## 
-##  Joint score test of b1 = 0.1, treating b2 and b3 as nuisances 
-## Score    df     p 
-##  0.44  1.00  0.51 
+##  Individual score test of b1 = 0.1, treating b2 and b3 as nuisances 
+##   Score      df       p 
+## 2.2e+01 1.0e+00 2.4e-06 
 ## 
 ##  Individual score test of b3 = 0, treating b1 and b2 as nuisances 
 ## Score    df     p 

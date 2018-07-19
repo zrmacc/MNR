@@ -4,7 +4,7 @@
 \alias{rScore.bnr}
 \title{Repeated Bivariate Regression Score Test}
 \usage{
-rScore.bnr(yt, ys, Zt1, Zt2, Zs, maxit = 100, eps = 1e-08, report = F)
+rScore.bnr(yt, ys, Zt1, Zt2, Zs, maxit = 100, eps = 1e-06, report = F)
 }
 \arguments{
 \item{yt}{Target outcome vector.}

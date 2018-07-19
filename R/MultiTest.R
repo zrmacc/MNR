@@ -125,7 +125,7 @@ constrXi = function(Ls,parallel){
 #' # Test for the effect of \eqn{\beta_{3}}, should not reject.
 #' Score.mnr(yt,Ys,Zt,Ls,L=c(FALSE,FALSE,FALSE,TRUE));
 
-Score.mnr = function(yt,Ys,Zt,Ls,L,b10,parallel=F,maxit=10,eps=1e-6,report=F){
+Score.mnr = function(yt,Ys,Zt,Ls,L,b10,parallel=F,maxit=100,eps=1e-6,report=F){
   # Input checks
   if(!is.vector(yt)){stop("A numeric vector is expected for yt.")};
   if(!is.matrix(Ys)){stop("A numeric vector is expected for Ys.")};
@@ -150,6 +150,8 @@ Score.mnr = function(yt,Ys,Zt,Ls,L,b10,parallel=F,maxit=10,eps=1e-6,report=F){
   Zt2 = Zt[,!L,drop=F];
   # Form surrogate design 
   Zs = constrXi(Ls=Ls,parallel=parallel);
+  # Adjust response for fixed component
+  yt = yt-as.numeric(fastMMp(Zt1,b10));
   # Fit null model
   M0 = fit.mnr(yt=yt,Ys=Ys,Zt=Zt2,Zs=Zs,maxit=maxit,eps=eps,report=report);
   # Extract precision
@@ -158,7 +160,7 @@ Score.mnr = function(yt,Ys,Zt,Ls,L,b10,parallel=F,maxit=10,eps=1e-6,report=F){
   LTT = Lambda[1,1];
   LTS = Lambda[1,2:ncol(Lambda),drop=F];
   # Extract residuals
-  eT = resid(M0,type="Target") - as.numeric(fastMMp(Zt1,b10));
+  eT = resid(M0,type="Target");
   eS = c(fastT(resid(M0,type="Surrogate")));
   # Score vector
   n = length(eT);

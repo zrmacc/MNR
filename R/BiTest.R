@@ -36,7 +36,7 @@
 #' # Test for the effect of \eqn{\beta_{3}}, should not reject.
 #' Score.bnr(yt,ys,Zt,Zs,L=c(FALSE,FALSE,FALSE,TRUE));
 
-Score.bnr = function(yt,ys,Zt,Zs,L,b10,maxit=10,eps=1e-6,report=F){
+Score.bnr = function(yt,ys,Zt,Zs,L,b10,maxit=100,eps=1e-6,report=F){
   # Input checks
   if(!is.vector(yt)){stop("A numeric vector is expected for yt.")};
   if(!is.vector(ys)){stop("A numeric vector is expected for ys.")};
@@ -59,6 +59,8 @@ Score.bnr = function(yt,ys,Zt,Zs,L,b10,maxit=10,eps=1e-6,report=F){
   # Zt2 is estimated under the null.
   Zt1 = Zt[,L,drop=F];
   Zt2 = Zt[,!L,drop=F];
+  # Adjust response for fixed component
+  yt = yt-as.numeric(fastMMp(Zt1,b10));
   # Fit null model
   M0 = fit.bnr(yt=yt,ys=ys,Zt=Zt2,Zs=Zs,maxit=maxit,eps=eps,report=report);
   # Extract precision
@@ -67,7 +69,7 @@ Score.bnr = function(yt,ys,Zt,Zs,L,b10,maxit=10,eps=1e-6,report=F){
   LTT = Lambda[1,1];
   LTS = Lambda[1,2];
   # Extract residuals
-  eT = resid(M0,type="Target") - as.numeric(fastMMp(Zt1,b10));
+  eT = resid(M0,type="Target");
   eS = resid(M0,type="Surrogate");
   # Score vector
   u = LTT*eT+LTS*eS;
@@ -124,7 +126,7 @@ Score.bnr = function(yt,ys,Zt,Zs,L,b10,maxit=10,eps=1e-6,report=F){
 #' # Test each column of G for association with the target outcome
 #' R = rScore.bnr(yt,ys,Zt1,Zt2,Zs);
 
-rScore.bnr = function(yt,ys,Zt1,Zt2,Zs,maxit=100,eps=1e-8,report=F){
+rScore.bnr = function(yt,ys,Zt1,Zt2,Zs,maxit=100,eps=1e-6,report=F){
   # Input checks
   if(!is.vector(yt)){stop("A numeric vector is expected for yt.")};
   if(!is.vector(ys)){stop("A numeric vector is expected for ys.")};

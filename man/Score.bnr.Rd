@@ -4,7 +4,7 @@
 \alias{Score.bnr}
 \title{Bivariate Regression Score Test}
 \usage{
-Score.bnr(yt, ys, Zt, Zs, L, b10, maxit = 10, eps = 1e-06, report = F)
+Score.bnr(yt, ys, Zt, Zs, L, b10, maxit = 100, eps = 1e-06, report = F)
 }
 \arguments{
 \item{yt}{Target outcome.}
