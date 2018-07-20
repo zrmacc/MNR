@@ -82,15 +82,15 @@ SEXP fastDet(const Eigen::Map<Eigen::MatrixXd> A){
 
 //' Quadratic Form
 //' 
-//' Calculates the quadratic form \eqn{x'Ax}.
+//' Calculates the quadratic form \eqn{X'AX}.
 //' 
-//' @param x Numeric vector.
+//' @param X Numeric matrix.
 //' @param A Numeric matrix.
 //' @export
 // [[Rcpp::export]]
-SEXP fastQF(const Eigen::Map<Eigen::VectorXd> x, const Eigen::Map<Eigen::MatrixXd> A){
-  const double q = x.transpose()*A*x;
-  return Rcpp::wrap(q);
+SEXP fastQF(const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd> A){
+  const Eigen::MatrixXd Q = X.transpose()*A*X;
+  return Rcpp::wrap(Q);
 }
 
 //' Schur complement

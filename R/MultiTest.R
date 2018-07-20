@@ -172,7 +172,7 @@ Score.mnr = function(yt,Ys,Zt,Ls,L,b10,parallel=F,maxit=100,eps=1e-6,report=F){
   # Efficient information
   V = SchurC(I11=I11,I22=I22,I12=I12);
   # Score statistic
-  Ts = fastQF(x=Score,A=fastInv(V));
+  Ts = fastQF(X=Score,A=fastInv(V));
   # P value
   p = pchisq(q=Ts,df=df,lower.tail=F);
   # Output

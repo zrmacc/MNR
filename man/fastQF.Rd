@@ -4,13 +4,13 @@
 \alias{fastQF}
 \title{Quadratic Form}
 \usage{
-fastQF(x, A)
+fastQF(X, A)
 }
 \arguments{
-\item{x}{Numeric vector.}
+\item{X}{Numeric matrix.}
 
 \item{A}{Numeric matrix.}
 }
 \description{
-Calculates the quadratic form \eqn{x'Ax}.
+Calculates the quadratic form \eqn{X'AX}.
 }

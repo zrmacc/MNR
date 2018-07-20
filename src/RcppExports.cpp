@@ -121,14 +121,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // fastQF
-SEXP fastQF(const Eigen::Map<Eigen::VectorXd> x, const Eigen::Map<Eigen::MatrixXd> A);
-RcppExport SEXP _MNR_fastQF(SEXP xSEXP, SEXP ASEXP) {
+SEXP fastQF(const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd> A);
+RcppExport SEXP _MNR_fastQF(SEXP XSEXP, SEXP ASEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::VectorXd> >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type A(ASEXP);
-    rcpp_result_gen = Rcpp::wrap(fastQF(x, A));
+    rcpp_result_gen = Rcpp::wrap(fastQF(X, A));
     return rcpp_result_gen;
 END_RCPP
 }

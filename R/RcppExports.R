@@ -120,13 +120,13 @@ fastDet <- function(A) {
 
 #' Quadratic Form
 #' 
-#' Calculates the quadratic form \eqn{x'Ax}.
+#' Calculates the quadratic form \eqn{X'AX}.
 #' 
-#' @param x Numeric vector.
+#' @param X Numeric matrix.
 #' @param A Numeric matrix.
 #' @export
-fastQF <- function(x, A) {
-    .Call('_MNR_fastQF', PACKAGE = 'MNR', x, A)
+fastQF <- function(X, A) {
+    .Call('_MNR_fastQF', PACKAGE = 'MNR', X, A)
 }
 
 #' Schur complement
