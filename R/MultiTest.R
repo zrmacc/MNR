@@ -110,7 +110,8 @@ constrXi = function(Ls,parallel){
 #'   secondary outcome has the same regression parameters.
 #' @param maxit Maximum number of parameter updates.
 #' @param eps Minimum acceptable improvement in log likelihood.
-#' @param report Report model fitting progress? 
+#' @param REML Apply REML correction to covariance matrix? Default is FALSE. 
+#' @param report Report model fitting progress? Default is FALSE. 
 #' 
 #' @importFrom stats model.matrix pchisq resid vcov
 #' @export
@@ -125,16 +126,19 @@ constrXi = function(Ls,parallel){
 #' # Test for the effect of \eqn{\beta_{3}}, should not reject.
 #' Score.mnr(yt,Ys,Zt,Ls,L=c(FALSE,FALSE,FALSE,TRUE));
 
-Score.mnr = function(yt,Ys,Zt,Ls,L,b10,parallel=F,maxit=100,eps=1e-6,report=F){
-  # Input checks
+Score.mnr = function(yt,Ys,Zt,Ls,L,b10,parallel=F,maxit=100,eps=1e-8,REML=F,report=F){
+  # Check input type
   if(!is.vector(yt)){stop("A numeric vector is expected for yt.")};
   if(!is.matrix(Ys)){stop("A numeric vector is expected for Ys.")};
   if(!is.matrix(Zt)){stop("A numeric matrix is expected for Zt.")};
   if(!all(unlist(lapply(Ls,is.matrix)))){stop("A list of numeric matrices is expected for Ls.")};
   if(!is.logical(L)){stop("A logical vector is expected for L.")};
+  
+  # Check test specification
   if(length(L)!=ncol(Zt)){stop("L should have as many entries as columns in Zt.")};
   if(sum(L)==0){stop("At least 1 entry of L should be TRUE.")};
   if(sum(L)==length(L)){stop("At least 1 entry of L should be FALSE.")};
+  
   # Check for missingness
   Miss = sum(is.na(yt))+sum(is.na(Ys))+sum(is.na(Zt))+sum(is.na(Ls));
   if(Miss>0){stop("Inputs should contain no missing data.")};
@@ -143,6 +147,8 @@ Score.mnr = function(yt,Ys,Zt,Ls,L,b10,parallel=F,maxit=100,eps=1e-6,report=F){
   # Null coefficient
   if(missing(b10)){b10=rep(0,times=df)};
   
+  # Observations
+  n = length(yt);
   # Partition target design
   # Zt1 is fixed under the null.
   # Zt2 is estimated under the null.
@@ -150,12 +156,20 @@ Score.mnr = function(yt,Ys,Zt,Ls,L,b10,parallel=F,maxit=100,eps=1e-6,report=F){
   Zt2 = Zt[,!L,drop=F];
   # Form surrogate design 
   Zs = constrXi(Ls=Ls,parallel=parallel);
+  # Regression parameters estimated
+  k = ncol(Zs)+ncol(Zt2);
   # Adjust response for fixed component
   yt = yt-as.numeric(fastMMp(Zt1,b10));
   # Fit null model
   M0 = fit.mnr(yt=yt,Ys=Ys,Zt=Zt2,Zs=Zs,maxit=maxit,eps=eps,report=report);
-  # Extract precision
-  Lambda = vcov(M0,type="Outcome",inv=T);
+  # Extract covariance
+  Sigma = vcov(M0,type="Outcome",inv=F);
+  # REML-type adjustment
+  if(REML){
+    diag(Sigma) = n/(n-k)*diag(Sigma);
+  };
+  # Precision matrix
+  Lambda = fastInv(Sigma);
   # Partition precision
   LTT = Lambda[1,1];
   LTS = Lambda[1,2:ncol(Lambda),drop=F];

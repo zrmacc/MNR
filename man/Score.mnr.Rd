@@ -4,8 +4,8 @@
 \alias{Score.mnr}
 \title{Multivariate Regression Score Test}
 \usage{
-Score.mnr(yt, Ys, Zt, Ls, L, b10, parallel = F, maxit = 100, eps = 1e-06,
-  report = F)
+Score.mnr(yt, Ys, Zt, Ls, L, b10, parallel = F, maxit = 100, eps = 1e-08,
+  REML = F, report = F)
 }
 \arguments{
 \item{yt}{Target outcome vector.}
@@ -29,7 +29,9 @@ secondary outcome has the same regression parameters.}
 
 \item{eps}{Minimum acceptable improvement in log likelihood.}
 
-\item{report}{Report model fitting progress?}
+\item{REML}{Apply REML correction to covariance matrix? Default is FALSE.}
+
+\item{report}{Report model fitting progress? Default is FALSE.}
 }
 \description{
 Score test of \eqn{H_{0}:\beta_{1}=\beta_{10}} in the multivariate outcome

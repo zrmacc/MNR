@@ -4,7 +4,8 @@
 \alias{rScore.bnr}
 \title{Repeated Bivariate Regression Score Test}
 \usage{
-rScore.bnr(yt, ys, Zt1, Zt2, Zs, maxit = 100, eps = 1e-06, report = F)
+rScore.bnr(yt, ys, Zt1, Zt2, Zs, maxit = 100, eps = 1e-08, REML = F,
+  report = F)
 }
 \arguments{
 \item{yt}{Target outcome vector.}
@@ -22,6 +23,8 @@ regression coefficients are unconstrained, i.e. estimated, under the null.}
 \item{maxit}{Maximum number of parameter updates.}
 
 \item{eps}{Minimum acceptable improvement in log likelihood.}
+
+\item{REML}{Apply REML correction to covariance matrix? Default is FALSE.}
 
 \item{report}{Report model fitting progress? Default is FALSE.}
 }

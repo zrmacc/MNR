@@ -19,6 +19,7 @@
 #'   the null. Defaults to zero.
 #' @param maxit Maximum number of parameter updates.
 #' @param eps Minimum acceptable improvement in log likelihood.
+#' @param REML Apply REML correction to covariance matrix? Default is FALSE. 
 #' @param report Report model fitting progress? Default is FALSE. 
 #'   
 #' @importFrom stats model.matrix pchisq resid vcov
@@ -36,16 +37,19 @@
 #' # Test for the effect of \eqn{\beta_{3}}, should not reject.
 #' Score.bnr(yt,ys,Zt,Zs,L=c(FALSE,FALSE,FALSE,TRUE));
 
-Score.bnr = function(yt,ys,Zt,Zs,L,b10,maxit=100,eps=1e-6,report=F){
-  # Input checks
+Score.bnr = function(yt,ys,Zt,Zs,L,b10,maxit=100,eps=1e-8,REML=F,report=F){
+  # Check input type
   if(!is.vector(yt)){stop("A numeric vector is expected for yt.")};
   if(!is.vector(ys)){stop("A numeric vector is expected for ys.")};
   if(!is.matrix(Zt)){stop("A numeric matrix is expected for Zt.")};
   if(!is.matrix(Zs)){stop("A numeric matrix is expected for Zs.")};
   if(!is.logical(L)){stop("A logical vector is expected for L.")};
+  
+  # Check test specification
   if(length(L)!=ncol(Zt)){stop("L should have as many entries as columns in Zt.")};
   if(sum(L)==0){stop("At least 1 entry of L should be TRUE.")};
   if(sum(L)==length(L)){stop("At least 1 entry of L should be FALSE.")};
+  
   # Check for missingness
   Miss = sum(is.na(yt))+sum(is.na(ys))+sum(is.na(Zt))+sum(is.na(Zs));
   if(Miss>0){stop("Inputs should contain no missing data.")};
@@ -54,17 +58,27 @@ Score.bnr = function(yt,ys,Zt,Zs,L,b10,maxit=100,eps=1e-6,report=F){
   # Null coefficient
   if(missing(b10)){b10=rep(0,times=df)};
   
+  # Observations
+  n = length(ys);
   # Partition target design
   # Zt1 is fixed under the null.
   # Zt2 is estimated under the null.
   Zt1 = Zt[,L,drop=F];
   Zt2 = Zt[,!L,drop=F];
+  # Regression parameters estimated
+  k = ncol(Zs)+ncol(Zt2);
   # Adjust response for fixed component
   yt = yt-as.numeric(fastMMp(Zt1,b10));
   # Fit null model
   M0 = fit.bnr(yt=yt,ys=ys,Zt=Zt2,Zs=Zs,maxit=maxit,eps=eps,report=report);
-  # Extract precision
-  Lambda = vcov(M0,type="Outcome",inv=T);
+  # Extract covariance
+  Sigma = vcov(M0,type="Outcome",inv=F);
+  # REML-type adjustment
+  if(REML){
+    diag(Sigma) = n/(n-k)*diag(Sigma);
+  };
+  # Precision matrix
+  Lambda = fastInv(Sigma);
   # Partition precision
   LTT = Lambda[1,1];
   LTS = Lambda[1,2];
@@ -108,6 +122,7 @@ Score.bnr = function(yt,ys,Zt,Zs,L,b10,maxit=100,eps=1e-6,report=F){
 #' @param Zs Numeric model matrix for the surrogate outcome.
 #' @param maxit Maximum number of parameter updates.
 #' @param eps Minimum acceptable improvement in log likelihood.
+#' @param REML Apply REML correction to covariance matrix? Default is FALSE. 
 #' @param report Report model fitting progress? Default is FALSE.  
 #'   
 #' @importFrom plyr aaply
@@ -126,20 +141,32 @@ Score.bnr = function(yt,ys,Zt,Zs,L,b10,maxit=100,eps=1e-6,report=F){
 #' # Test each column of G for association with the target outcome
 #' R = rScore.bnr(yt,ys,Zt1,Zt2,Zs);
 
-rScore.bnr = function(yt,ys,Zt1,Zt2,Zs,maxit=100,eps=1e-6,report=F){
-  # Input checks
+rScore.bnr = function(yt,ys,Zt1,Zt2,Zs,maxit=100,eps=1e-8,REML=F,report=F){
+  # Check input type
   if(!is.vector(yt)){stop("A numeric vector is expected for yt.")};
   if(!is.vector(ys)){stop("A numeric vector is expected for ys.")};
   if(!is.matrix(Zt1)){stop("A numeric matrix is expected for Zt1.")};
   if(!is.matrix(Zt2)){stop("A numeric matrix is expected for Zt2.")};
   if(!is.matrix(Zs)){stop("A numeric matrix is expected for Zs.")};
+  
   # Check for missingness
   Miss = sum(is.na(yt))+sum(is.na(ys))+sum(is.na(Zt2))+sum(is.na(Zs));
   if(Miss>0){stop("Inputs other than Zt1 should contain no missing data.")};
+  
+  # Observations
+  n = length(ys);
+  # Regression parameters estimated
+  k = ncol(Zs)+ncol(Zt2);
   # Fit null model
   M0 = fit.bnr(yt=yt,ys=ys,Zt=Zt2,Zs=Zs,maxit=maxit,eps=eps,report=report);
-  # Extract precision
-  Lambda = vcov(M0,type="Outcome",inv=T);
+  # Extract covariance
+  Sigma = vcov(M0,type="Outcome",inv=F);
+  # REML-type adjustment
+  if(REML){
+    diag(Sigma) = n/(n-k)*diag(Sigma);
+  };
+  # Precision matrix
+  Lambda = fastInv(Sigma);
   # Partition precision
   LTT = Lambda[1,1];
   LTS = Lambda[1,2];

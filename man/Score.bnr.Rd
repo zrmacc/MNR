@@ -4,7 +4,8 @@
 \alias{Score.bnr}
 \title{Bivariate Regression Score Test}
 \usage{
-Score.bnr(yt, ys, Zt, Zs, L, b10, maxit = 100, eps = 1e-06, report = F)
+Score.bnr(yt, ys, Zt, Zs, L, b10, maxit = 100, eps = 1e-08, REML = F,
+  report = F)
 }
 \arguments{
 \item{yt}{Target outcome.}
@@ -24,6 +25,8 @@ the null. Defaults to zero.}
 \item{maxit}{Maximum number of parameter updates.}
 
 \item{eps}{Minimum acceptable improvement in log likelihood.}
+
+\item{REML}{Apply REML correction to covariance matrix? Default is FALSE.}
 
 \item{report}{Report model fitting progress? Default is FALSE.}
 }
