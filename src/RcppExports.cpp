@@ -17,110 +17,98 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// fastMMp
-SEXP fastMMp(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::MatrixXd> B);
-RcppExport SEXP _MNR_fastMMp(SEXP ASEXP, SEXP BSEXP) {
+// MMP
+SEXP MMP(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::MatrixXd> B);
+RcppExport SEXP _MNR_MMP(SEXP ASEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type A(ASEXP);
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(fastMMp(A, B));
+    rcpp_result_gen = Rcpp::wrap(MMP(A, B));
     return rcpp_result_gen;
 END_RCPP
 }
-// fastT
-SEXP fastT(const Eigen::Map<Eigen::MatrixXd> A);
-RcppExport SEXP _MNR_fastT(SEXP ASEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type A(ASEXP);
-    rcpp_result_gen = Rcpp::wrap(fastT(A));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fastIP
-SEXP fastIP(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::MatrixXd> B);
-RcppExport SEXP _MNR_fastIP(SEXP ASEXP, SEXP BSEXP) {
+// matIP
+SEXP matIP(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::MatrixXd> B);
+RcppExport SEXP _MNR_matIP(SEXP ASEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type A(ASEXP);
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(fastIP(A, B));
+    rcpp_result_gen = Rcpp::wrap(matIP(A, B));
     return rcpp_result_gen;
 END_RCPP
 }
-// fastInv
-SEXP fastInv(const Eigen::Map<Eigen::MatrixXd> A);
-RcppExport SEXP _MNR_fastInv(SEXP ASEXP) {
+// matInv
+SEXP matInv(const Eigen::Map<Eigen::MatrixXd> A);
+RcppExport SEXP _MNR_matInv(SEXP ASEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type A(ASEXP);
-    rcpp_result_gen = Rcpp::wrap(fastInv(A));
+    rcpp_result_gen = Rcpp::wrap(matInv(A));
     return rcpp_result_gen;
 END_RCPP
 }
-// fastDet
-SEXP fastDet(const Eigen::Map<Eigen::MatrixXd> A);
-RcppExport SEXP _MNR_fastDet(SEXP ASEXP) {
+// det
+SEXP det(const Eigen::Map<Eigen::MatrixXd> A);
+RcppExport SEXP _MNR_det(SEXP ASEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type A(ASEXP);
-    rcpp_result_gen = Rcpp::wrap(fastDet(A));
+    rcpp_result_gen = Rcpp::wrap(det(A));
     return rcpp_result_gen;
 END_RCPP
 }
-// fastOP
-SEXP fastOP(const Eigen::Map<Eigen::VectorXd> x, const Eigen::Map<Eigen::VectorXd> y);
-RcppExport SEXP _MNR_fastOP(SEXP xSEXP, SEXP ySEXP) {
+// matOP
+SEXP matOP(const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd> Y);
+RcppExport SEXP _MNR_matOP(SEXP XSEXP, SEXP YSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::VectorXd> >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::VectorXd> >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(fastOP(x, y));
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type Y(YSEXP);
+    rcpp_result_gen = Rcpp::wrap(matOP(X, Y));
     return rcpp_result_gen;
 END_RCPP
 }
-// fastQF
-SEXP fastQF(const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd> A);
-RcppExport SEXP _MNR_fastQF(SEXP XSEXP, SEXP ASEXP) {
+// matQF
+SEXP matQF(const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd> A);
+RcppExport SEXP _MNR_matQF(SEXP XSEXP, SEXP ASEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type A(ASEXP);
-    rcpp_result_gen = Rcpp::wrap(fastQF(X, A));
+    rcpp_result_gen = Rcpp::wrap(matQF(X, A));
     return rcpp_result_gen;
 END_RCPP
 }
 // SchurC
-SEXP SchurC(const Eigen::Map<Eigen::MatrixXd> I11, const Eigen::Map<Eigen::MatrixXd> I22, const Eigen::Map<Eigen::MatrixXd> I12);
-RcppExport SEXP _MNR_SchurC(SEXP I11SEXP, SEXP I22SEXP, SEXP I12SEXP) {
+SEXP SchurC(const Eigen::Map<Eigen::MatrixXd> Ibb, const Eigen::Map<Eigen::MatrixXd> Iaa, const Eigen::Map<Eigen::MatrixXd> Iba);
+RcppExport SEXP _MNR_SchurC(SEXP IbbSEXP, SEXP IaaSEXP, SEXP IbaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type I11(I11SEXP);
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type I22(I22SEXP);
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type I12(I12SEXP);
-    rcpp_result_gen = Rcpp::wrap(SchurC(I11, I22, I12));
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type Ibb(IbbSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type Iaa(IaaSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type Iba(IbaSEXP);
+    rcpp_result_gen = Rcpp::wrap(SchurC(Ibb, Iaa, Iba));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_MNR_tr", (DL_FUNC) &_MNR_tr, 1},
-    {"_MNR_fastMMp", (DL_FUNC) &_MNR_fastMMp, 2},
-    {"_MNR_fastT", (DL_FUNC) &_MNR_fastT, 1},
-    {"_MNR_fastIP", (DL_FUNC) &_MNR_fastIP, 2},
-    {"_MNR_fastInv", (DL_FUNC) &_MNR_fastInv, 1},
-    {"_MNR_fastDet", (DL_FUNC) &_MNR_fastDet, 1},
-    {"_MNR_fastOP", (DL_FUNC) &_MNR_fastOP, 2},
-    {"_MNR_fastQF", (DL_FUNC) &_MNR_fastQF, 2},
+    {"_MNR_MMP", (DL_FUNC) &_MNR_MMP, 2},
+    {"_MNR_matIP", (DL_FUNC) &_MNR_matIP, 2},
+    {"_MNR_matInv", (DL_FUNC) &_MNR_matInv, 1},
+    {"_MNR_det", (DL_FUNC) &_MNR_det, 1},
+    {"_MNR_matOP", (DL_FUNC) &_MNR_matOP, 2},
+    {"_MNR_matQF", (DL_FUNC) &_MNR_matQF, 2},
     {"_MNR_SchurC", (DL_FUNC) &_MNR_SchurC, 3},
     {NULL, NULL, 0}
 };

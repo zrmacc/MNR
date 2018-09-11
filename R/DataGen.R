@@ -53,7 +53,7 @@ rMNR = function(X,b,S){
   H = array(0,dim=c(n,0));
   # Surrogate predictors
   for(j in 1:k){
-    H = cbind(H,fastMMp(X[[j]],b[[j]]));
+    H = cbind(H,MMP(X[[j]],b[[j]]));
   }
   # Residuals 
   E = rmvn(n=n,mu=rep(0,k),sigma=S);

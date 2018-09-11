@@ -10,7 +10,7 @@ tr(A)
 \item{A}{Numeric matrix.}
 }
 \value{
-A scalar.
+Scalar.
 }
 \description{
 Calculates the trace of a matrix \eqn{A}.

@@ -65,7 +65,7 @@ rScore.mnr = function(Y,j=1,G,X,maxit=100,eps=1e-8,report=F,parallel=F){
   # Extract residuals
   E = resid(M0);
   # Working vector
-  u = fastMMp(E,L[1,]);
+  u = MMP(E,L[1,]);
   # Function to calculate score statistics
   aux = function(g){
     # Check for missingness
@@ -83,28 +83,28 @@ rScore.mnr = function(Y,j=1,G,X,maxit=100,eps=1e-8,report=F,parallel=F){
     }
     ## Information matrices
     # Marginal information
-    I11 = L[1,1]*fastIP(g0,g0);
+    Ibb = L[1,1]*matIP(g0,g0);
     i = NULL;
-    I12 = foreach(i=1:k,.combine=cbind) %do% {
-      return(fastIP(g0,X0[[i]])*L[1,i])
+    Iba = foreach(i=1:k,.combine=cbind) %do% {
+      return(matIP(g0,X0[[i]])*L[1,i])
     };
     # Nusiance information
-    I22 = vcov(M0,type="Information");
+    Iaa = vcov(M0,type="Information");
     if(sum(!key)>0){
       l = NULL;
       # Loss of information
-      J22 = foreach(i=1:k,.combine=rbind) %do% {
+      Jaa = foreach(i=1:k,.combine=rbind) %do% {
         Slice = foreach(l=1:k,.combine=cbind) %do% {
-          Out = fastIP(X1[[i]],X1[[l]])*L[i,l];
+          Out = matIP(X1[[i]],X1[[l]])*L[i,l];
           return(Out);
         };
       };
-      I22 = I22-J22;
+      Iaa = Iaa-Jaa;
     };
     # Efficient information
-    V = as.numeric(SchurC(I11=I11,I22=I22,I12=I12));
+    V = as.numeric(SchurC(Ibb=Ibb,Iaa=Iaa,Iba=Iba));
     # Score vector
-    U = as.numeric(fastIP(g0,u0));
+    U = as.numeric(matIP(g0,u0));
     # Score statistic
     Ts = (U^2)/V;
     return(Ts);

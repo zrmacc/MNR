@@ -6,7 +6,8 @@
 #' Calculates the trace of a matrix \eqn{A}.
 #'
 #' @param A Numeric matrix.
-#' @return A scalar. 
+#' @return Scalar.
+#' @export  
 tr <- function(A) {
     .Call('_MNR_tr', PACKAGE = 'MNR', A)
 }
@@ -17,18 +18,10 @@ tr <- function(A) {
 #'
 #' @param A Numeric matrix.
 #' @param B Numeric matrix.
-#' @return A numeric matrix. 
-fastMMp <- function(A, B) {
-    .Call('_MNR_fastMMp', PACKAGE = 'MNR', A, B)
-}
-
-#' Matrix Transpose
-#'
-#' Constructs \eqn{A'} from \eqn{A}.
-#'
-#' @param A Numeric matrix.
-fastT <- function(A) {
-    .Call('_MNR_fastT', PACKAGE = 'MNR', A)
+#' @return Numeric matrix. 
+#' @export 
+MMP <- function(A, B) {
+    .Call('_MNR_MMP', PACKAGE = 'MNR', A, B)
 }
 
 #' Matrix Inner Product
@@ -37,9 +30,10 @@ fastT <- function(A) {
 #'
 #' @param A Numeric matrix.
 #' @param B Numeric matrix.
-#' @return A numeric matrix. 
-fastIP <- function(A, B) {
-    .Call('_MNR_fastIP', PACKAGE = 'MNR', A, B)
+#' @return Numeric matrix. 
+#' @export 
+matIP <- function(A, B) {
+    .Call('_MNR_matIP', PACKAGE = 'MNR', A, B)
 }
 
 #' Matrix Inverse
@@ -47,9 +41,10 @@ fastIP <- function(A, B) {
 #' Calcualtes \eqn{A^{-1}}.
 #'
 #' @param A Numeric matrix.
-#' @return A numeric matrix. 
-fastInv <- function(A) {
-    .Call('_MNR_fastInv', PACKAGE = 'MNR', A)
+#' @return Numeric matrix. 
+#' @export 
+matInv <- function(A) {
+    .Call('_MNR_matInv', PACKAGE = 'MNR', A)
 }
 
 #' Matrix Determinant
@@ -57,20 +52,22 @@ fastInv <- function(A) {
 #' Calculates the determinant of \eqn{A}.
 #'
 #' @param A Numeric matrix.
-#' @return A scalar. 
-fastDet <- function(A) {
-    .Call('_MNR_fastDet', PACKAGE = 'MNR', A)
+#' @return Scalar. 
+#' @export 
+det <- function(A) {
+    .Call('_MNR_det', PACKAGE = 'MNR', A)
 }
 
 #' Fast Outer Product
 #' 
-#' Calculates the outer product \eqn{xy'}.
+#' Calculates the outer product \eqn{XY'}.
 #' 
-#' @param x Numeric vector.
-#' @param y Numeric vector.
+#' @param X Numeric matrix.
+#' @param Y Numeric matrix.
 #' @return Numeric matrix.
-fastOP <- function(x, y) {
-    .Call('_MNR_fastOP', PACKAGE = 'MNR', x, y)
+#' @export 
+matOP <- function(X, Y) {
+    .Call('_MNR_matOP', PACKAGE = 'MNR', X, Y)
 }
 
 #' Quadratic Form
@@ -79,20 +76,22 @@ fastOP <- function(x, y) {
 #' 
 #' @param X Numeric matrix.
 #' @param A Numeric matrix.
-fastQF <- function(X, A) {
-    .Call('_MNR_fastQF', PACKAGE = 'MNR', X, A)
+#' @return Numeric matrix. 
+#' @export 
+matQF <- function(X, A) {
+    .Call('_MNR_matQF', PACKAGE = 'MNR', X, A)
 }
 
 #' Schur complement
 #'
-#' Calculates the efficient information \eqn{I_{11}-I_{12}I_{22}^{-1}I_{21}}. 
+#' Calculates the efficient information \eqn{I_{bb}-I_{ba}I_{aa}^{-1}I_{ab}}. 
 #'
-#' @param I11 Information of target parameter
-#' @param I22 Information of nuisance parameter
-#' @param I12 Cross information between target and nuisance parameters
-#' @return A numeric matrix. 
-#'
-SchurC <- function(I11, I22, I12) {
-    .Call('_MNR_SchurC', PACKAGE = 'MNR', I11, I22, I12)
+#' @param Ibb Information of target parameter
+#' @param Iaa Information of nuisance parameter
+#' @param Iba Cross information between target and nuisance parameters
+#' @return Numeric matrix. 
+#' @export 
+SchurC <- function(Ibb, Iaa, Iba) {
+    .Call('_MNR_SchurC', PACKAGE = 'MNR', Ibb, Iaa, Iba)
 }
 

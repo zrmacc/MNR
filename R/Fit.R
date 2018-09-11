@@ -49,10 +49,10 @@ fit.mnr = function(Y,X,a=0.05,maxit=10,eps=1e-6,report=T){
   k = ncol(Y);
   m = lapply(X,ncol);
   # Objective function
-  Q = function(S){-n*log(fastDet(S))};
+  Q = function(S){-n*log(det(S))};
   # Reusable matrices
-  XtX = lapply(X,function(x){fastIP(x,x)});
-  XtXi = lapply(XtX,fastInv);
+  XtX = lapply(X,function(x){matIP(x,x)});
+  XtXi = lapply(XtX,matInv);
   
   ## Initialize
   # List to hold initial parameters
@@ -61,19 +61,19 @@ fit.mnr = function(Y,X,a=0.05,maxit=10,eps=1e-6,report=T){
   b0 = list();
   i = NULL;
   for(i in 1:k){
-    b0[[i]] = fastMMp(XtXi[[i]],fastIP(X[[i]],Y[,i]));
+    b0[[i]] = MMP(XtXi[[i]],matIP(X[[i]],Y[,i]));
   }
   theta0$b = b0;
   # Residual matrix
   E0 = array(0,dim=c(n,0));
   for(i in 1:k){
-    E0 = cbind(E0,Y[,i]-fastMMp(X[[i]],b0[[i]]));
+    E0 = cbind(E0,Y[,i]-MMP(X[[i]],b0[[i]]));
   }
   theta0$E = E0;
   # Initialize sigma
-  theta0$S = fastIP(theta0$E,theta0$E)/n;
+  theta0$S = matIP(theta0$E,theta0$E)/n;
   # Precision
-  theta0$L = fastInv(theta0$S);
+  theta0$L = matInv(theta0$S);
   
   # Update wrapper
   Update = function(theta){
@@ -86,14 +86,14 @@ fit.mnr = function(Y,X,a=0.05,maxit=10,eps=1e-6,report=T){
     # Update beta
     b1 = list();
     for(i in 1:k){
-      wi = fastMMp(E[,-c(i),drop=F],L[-c(i),c(i),drop=F]/L[i,i]);
-      b1[[i]] = b0[[i]]+fastMMp(XtXi[[i]],fastIP(X[[i]],wi));
+      wi = MMP(E[,-c(i),drop=F],L[-c(i),c(i),drop=F]/L[i,i]);
+      b1[[i]] = b0[[i]]+MMP(XtXi[[i]],matIP(X[[i]],wi));
       # Update residual
-      E[,i] = Y[,i]-fastMMp(X[[i]],b1[[i]]);
+      E[,i] = Y[,i]-MMP(X[[i]],b1[[i]]);
     }
     # Update covariance
-    S1 = fastIP(E,E)/n;
-    L1 = fastInv(S1);
+    S1 = matIP(E,E)/n;
+    L1 = matInv(S1);
     # New objective
     q1 = Q(S1);
     # Increment
@@ -129,7 +129,7 @@ fit.mnr = function(Y,X,a=0.05,maxit=10,eps=1e-6,report=T){
   };
   
   # Precision matrix
-  L = fastInv(theta0$S);
+  L = matInv(theta0$S);
   ## Information for beta
   j = NULL;
   Ibb = foreach(i=1:k,.combine=rbind) %do% {
@@ -137,13 +137,13 @@ fit.mnr = function(Y,X,a=0.05,maxit=10,eps=1e-6,report=T){
       if(j==i){
         Out = XtX[[i]]*L[i,i];
       } else {
-        Out = fastIP(X[[i]],X[[j]])*L[i,j];
+        Out = matIP(X[[i]],X[[j]])*L[i,j];
       };
       return(Out);
     };
   };
   # Inverse 
-  Ibbi = fastInv(Ibb);
+  Ibbi = matInv(Ibb);
   
   ## Residuals
   E = theta0$E;

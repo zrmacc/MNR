@@ -74,7 +74,7 @@ Score.mnr = function(Y,j=1,X,L,b10=NULL,maxit=100,eps=1e-8,report=F){
   Zb = Z[,!L,drop=F];
   X[[1]] = Zb;
   # Adjust response for fixed component
-  Y[,1] = Y[,1]-fastMMp(Za,b10);
+  Y[,1] = Y[,1]-MMP(Za,b10);
   # Fit null model
   M0 = fit.mnr(Y=Y,X=X,maxit=maxit,eps=eps,report=report);
   # Extract covariance
@@ -82,19 +82,19 @@ Score.mnr = function(Y,j=1,X,L,b10=NULL,maxit=100,eps=1e-8,report=F){
   # Extract residuals
   E = resid(M0);
   # Score vector
-  U = fastIP(Za,fastMMp(E,L[1,]));
+  U = matIP(Za,MMP(E,L[1,]));
   # Covariance matrix
-  I11 = fastIP(Za,Za)*L[1,1];
-  I22 = vcov(M0,type="Information",inv=F);
+  Ibb = matIP(Za,Za)*L[1,1];
+  Iaa = vcov(M0,type="Information",inv=F);
   # Cross Information
   i = NULL;
-  I12 = foreach(i=1:k,.combine=cbind) %do% {
-    return(fastIP(Za,X[[i]])*L[1,i])
+  Iba = foreach(i=1:k,.combine=cbind) %do% {
+    return(matIP(Za,X[[i]])*L[1,i])
   }
   # Efficient information
-  V = SchurC(I11=I11,I22=I22,I12=I12);
+  V = SchurC(Ibb=Ibb,Iaa=Iaa,Iba=Iba);
   # Score statistic
-  Ts = fastQF(X=U,A=fastInv(V));
+  Ts = matQF(X=U,A=matInv(V));
   # P value
   p = pchisq(q=Ts,df=df,lower.tail=F);
   # Output

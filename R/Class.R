@@ -113,13 +113,13 @@ vcov.mnr = function(object,...,type="Information",inv=F){
   if(! type %in% c("Information","Outcome")){stop("Select Information or Outcome.")};
   if(type=="Outcome"){
     Out = object@Covariance;
-    if(inv){Out = fastInv(Out)};
+    if(inv){Out = matInv(Out)};
     return(Out);
   } else {
     # Beta information
     Out = object@Information;
     # Invert
-    if(inv){Out = fastInv(Out);}
+    if(inv){Out = matInv(Out);}
     return(Out);
   }
 };
