@@ -13,7 +13,7 @@ NULL
 #' 
 #' @param Y Outcome matrix.
 #' @param X List of model matrices, one for each outcome.
-#' @param a Significance level, for confidence intervals. 
+#' @param sig Significance level, for confidence intervals. 
 #' @param maxit Maximum number of parameter updates.
 #' @param eps Minimum acceptable improvement in log likelihood.
 #' @param report Report fitting progress? Default is FALSE.
@@ -39,7 +39,7 @@ NULL
 #' resid(M);
 #' }
 
-fit.mnr = function(Y,X,a=0.05,maxit=10,eps=1e-6,report=T){
+fit.mnr = function(Y,X,sig=0.05,maxit=10,eps=1e-6,report=T){
   # Check input type
   if(!is.matrix(Y)){stop("A numeric matrix is expected for Y.")};
   if(!is.list(X)||(!all(unlist(lapply(X,is.matrix))))){
@@ -152,14 +152,14 @@ fit.mnr = function(Y,X,a=0.05,maxit=10,eps=1e-6,report=T){
   
   ## Regression coefficients
   # Overall
-  b = unlist(theta0$b);
+  Point = unlist(theta0$b);
   # SE
-  se = sqrt(diag(Ibbi));
+  SE = sqrt(diag(Ibbi));
   # CIs
-  z = qnorm(p=1-(a/2));
-  L = b-z*se;
-  U = b+z*se;
-  p = 2*pnorm(q=abs(b/se),lower.tail=F);
+  z = qnorm(p=1-(sig/2));
+  L = Point-z*SE;
+  U = Point+z*SE;
+  P = 2*pnorm(q=abs(Point/SE),lower.tail=F);
   # Labeling
   Lab = foreach(i=1:k,.combine=rbind) %do% {
     # Outcome
@@ -168,7 +168,7 @@ fit.mnr = function(Y,X,a=0.05,maxit=10,eps=1e-6,report=T){
     Coeff = colnames(X[[i]]);
     return(data.frame("Outcome"=Outcome,"Coeff"=Coeff));
   }
-  Coeff = data.frame(Lab,"Point"=b,"SE"=se,"L"=L,"U"=U,"p"=p);
+  Coeff = data.frame(Lab,"Point"=Point,"SE"=SE,"L"=L,"U"=U,"p"=P);
   rownames(Ibb) = colnames(Ibb) = Coeff$Coeff;
   # Covariance matrix
   S = theta0$S;

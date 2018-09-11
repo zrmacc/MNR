@@ -4,14 +4,14 @@
 \alias{fit.mnr}
 \title{Fit Multivariate Outcome Model}
 \usage{
-fit.mnr(Y, X, a = 0.05, maxit = 10, eps = 1e-06, report = T)
+fit.mnr(Y, X, sig = 0.05, maxit = 10, eps = 1e-06, report = T)
 }
 \arguments{
 \item{Y}{Outcome matrix.}
 
 \item{X}{List of model matrices, one for each outcome.}
 
-\item{a}{Significance level, for confidence intervals.}
+\item{sig}{Significance level, for confidence intervals.}
 
 \item{maxit}{Maximum number of parameter updates.}
 
