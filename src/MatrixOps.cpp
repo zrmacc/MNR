@@ -6,7 +6,6 @@
 //' Calculates the trace of a matrix \eqn{A}.
 //'
 //' @param A Numeric matrix.
-//' @export
 //' @return A scalar. 
 // [[Rcpp::export]]
 SEXP tr(const Eigen::Map<Eigen::MatrixXd> A){
@@ -20,7 +19,6 @@ SEXP tr(const Eigen::Map<Eigen::MatrixXd> A){
 //'
 //' @param A Numeric matrix.
 //' @param B Numeric matrix.
-//' @export
 //' @return A numeric matrix. 
 // [[Rcpp::export]]
 SEXP fastMMp(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::MatrixXd> B){
@@ -33,7 +31,6 @@ SEXP fastMMp(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::Matrix
 //' Constructs \eqn{A'} from \eqn{A}.
 //'
 //' @param A Numeric matrix.
-//' @export
 // [[Rcpp::export]]
 SEXP fastT(const Eigen::Map<Eigen::MatrixXd> A){
   const Eigen::MatrixXd At = A.transpose();
@@ -46,7 +43,6 @@ SEXP fastT(const Eigen::Map<Eigen::MatrixXd> A){
 //'
 //' @param A Numeric matrix.
 //' @param B Numeric matrix.
-//' @export
 //' @return A numeric matrix. 
 // [[Rcpp::export]]
 SEXP fastIP(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::MatrixXd> B){
@@ -59,7 +55,6 @@ SEXP fastIP(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::MatrixX
 //' Calcualtes \eqn{A^{-1}}.
 //'
 //' @param A Numeric matrix.
-//' @export
 //' @return A numeric matrix. 
 // [[Rcpp::export]]
 SEXP fastInv(const Eigen::Map<Eigen::MatrixXd> A){
@@ -72,12 +67,24 @@ SEXP fastInv(const Eigen::Map<Eigen::MatrixXd> A){
 //' Calculates the determinant of \eqn{A}.
 //'
 //' @param A Numeric matrix.
-//' @export
 //' @return A scalar. 
 // [[Rcpp::export]]
 SEXP fastDet(const Eigen::Map<Eigen::MatrixXd> A){
   const double d = A.determinant();
   return Rcpp::wrap(d);
+}
+
+//' Fast Outer Product
+//' 
+//' Calculates the outer product \eqn{xy'}.
+//' 
+//' @param x Numeric vector.
+//' @param y Numeric vector.
+//' @return Numeric matrix.
+// [[Rcpp::export]]
+SEXP fastOP(const Eigen::Map<Eigen::VectorXd> x, const Eigen::Map<Eigen::VectorXd> y){
+  const Eigen::MatrixXd Q = x * y.transpose();
+  return Rcpp::wrap(Q);
 }
 
 //' Quadratic Form
@@ -86,7 +93,6 @@ SEXP fastDet(const Eigen::Map<Eigen::MatrixXd> A){
 //' 
 //' @param X Numeric matrix.
 //' @param A Numeric matrix.
-//' @export
 // [[Rcpp::export]]
 SEXP fastQF(const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd> A){
   const Eigen::MatrixXd Q = X.transpose()*A*X;
@@ -100,13 +106,12 @@ SEXP fastQF(const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixX
 //' @param I11 Information of target parameter
 //' @param I22 Information of nuisance parameter
 //' @param I12 Cross information between target and nuisance parameters
-//' @export
 //' @return A numeric matrix. 
 //'
 // [[Rcpp::export]]
 SEXP SchurC(const Eigen::Map<Eigen::MatrixXd> I11, const Eigen::Map<Eigen::MatrixXd> I22,
             const Eigen::Map<Eigen::MatrixXd> I12){
   // Kernel matrix
-  const Eigen::MatrixXd K = I11 - I12 * I22.llt().solve(I12.transpose());
+  const Eigen::MatrixXd K = I11 - I12 * I22.ldlt().solve(I12.transpose());
   return Rcpp::wrap(K);
 }

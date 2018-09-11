@@ -1,8 +1,9 @@
 Package: MNR
-Title: Hypothesis Testing in Multivariate Normal Regression
-Version: 0.1.0
+Title: Multivariate Normal Regression
+Version: 0.2.0
 Authors@R: person("Zachary", "McCaw", email = "zmccaw@g.harvard.edu", role = c("aut", "cre"))
-Description: Hypothesis testing for an outcome of primary interest modeled jointly with one or more surrogate outcomes using a multivariate normal regression framework. The target and surrogate outcomes are taken as multivariate normal. Separate regression models are specified for each outcome. Score tests are provided for testing hypotheses on target outcome regression parameters. 
+Description: Performs estimation and inference for a regression model in which a multivariate normal 
+	response vector is observed for each subject. Separate regression are specified for each element of the response vector. The outcome covariance matrix is left unstructured. Score tests are provided for testing hypotheses on regression coefficients. 
 Depends: R (>= 3.4.0)
 License: GPL-3
 Encoding: UTF-8
@@ -11,7 +12,9 @@ LinkingTo:
 	Rcpp,
 	RcppEigen
 Imports:
+	foreach,
 	methods,
+	mvnfast,
 	plyr, 
 	Rcpp,
 	stats
