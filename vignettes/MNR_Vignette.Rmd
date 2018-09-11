@@ -136,7 +136,7 @@ Score.mnr(Y=Y,j=3,X=X,b10=c(0.1,0.1),L=c(F,T,F,T,F));
 
 ## Repeated Score Test
 
-Consider testing for association between a specified column of `Y`, and each column of a matrix `G`. The function \code{rScore.mnr} accelerates association testing by recycling the same null model for each hypothesis test. This function is motivated by genetic association testing, where `G` represents genotype at different loci across the genome. The *genotype* matrix `G` may contain missing values, although the outcome `Y` and design matrices `X` still should not. 
+Consider testing for association between a specified column of `Y`, and each column of a matrix `G`. The function `rScore.mnr` accelerates association testing by recycling the same null model for each hypothesis test. This function is motivated by genetic association testing, where `G` represents genotype at different loci across the genome. The *genotype* matrix `G` may contain missing values, although the outcome `Y` and design matrices `X` still should not. 
 
 ```{r, eval=F}
 # Genotype matrix

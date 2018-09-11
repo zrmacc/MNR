@@ -292,7 +292,7 @@ Score.mnr(Y=Y,j=3,X=X,b10=c(0.1,0.1),L=c(F,T,F,T,F));</code></pre>
 ## 1.5734197 2.0000000 0.4553405</code></pre>
 <div id="repeated-score-test" class="section level2">
 <h2>Repeated Score Test</h2>
-<p>Consider testing for association between a specified column of <code>Y</code>, and each column of a matrix <code>G</code>. The function  accelerates association testing by recycling the same null model for each hypothesis test. This function is motivated by genetic association testing, where <code>G</code> represents genotype at different loci across the genome. The <em>genotype</em> matrix <code>G</code> may contain missing values, although the outcome <code>Y</code> and design matrices <code>X</code> still should not.</p>
+<p>Consider testing for association between a specified column of <code>Y</code>, and each column of a matrix <code>G</code>. The function <code>rScore.mnr</code> accelerates association testing by recycling the same null model for each hypothesis test. This function is motivated by genetic association testing, where <code>G</code> represents genotype at different loci across the genome. The <em>genotype</em> matrix <code>G</code> may contain missing values, although the outcome <code>Y</code> and design matrices <code>X</code> still should not.</p>
 <pre class="r"><code># Genotype matrix
 G = replicate(2000,rbinom(n=1000,size=2,prob=0.25));
 storage.mode(G) = &quot;numeric&quot;;
