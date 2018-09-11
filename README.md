@@ -54,13 +54,13 @@ $$
 Suppose $\beta_{j}$ is the covariate of interest. Partition $\beta_{j}=(\beta_{1,j},\beta_{2,j})$. Consider the hypothesis $\beta_{1,j} = \beta_{1,j}^{\dagger}$. Let $\eta_{1,j}$ denote the collected nuisance regression parameters. The score test of $H_{0}:\beta_{1,j} = \beta_{1,j}^{\dagger}$ takes the form:
 
 $$
-T_{S} = U_{\beta_{1,j}}(\beta_{1,j}^{\dagger},\tilde{\eta}_{1,j})'I_{\beta_{1,j}\beta_{1,j}\big|\eta_{1,j}}^{-1}
-U_{\beta_{1,j}}(\beta_{1,j}^{\dagger},\tilde{\eta}_{1,j})
+T_{S} = U_{\beta_{1,j}}(\beta_{1,j}^{\dagger},\eta_{1,j})'I_{\beta_{1,j}\beta_{1,j}\big|\eta_{1,j}}^{-1}
+U_{\beta_{1,j}}(\beta_{1,j}^{\dagger},\eta_{1,j})
 $$
 
 # Example Data
 
-Below, data is simulated for $n=10^{3}$ subjects. The outcome is trivariate normal $y_{i}\in\mathbb{R}^{3}$. The covariance structure is exchangeable with diagonal one and off diagonal $\rho=0.5$. Separate regression models are specified for each component of $y_{i}$. The mean of the first component $\mu_{i1}$ depends on an intercept and two independent, normal covariates. The regression coefficient is $\beta_{1} = (-1,0.1,-0.1)$. The mean of the second component $\mu_{i2}$ depends on an intercept and three independent, normal covariates. The regression coefficient is $\beta_{2} = (1,-0.1,1.0,0)$. The mean of the last component $\mu_{i3}$ depends on an intercept and four independent, normal covariates. The regression coefficient is $\beta_{3} = c(0,0.1,-0.1,0.1,-0.1)$.
+Below, data is simulated for $n=10^{3}$ subjects. The outcome is trivariate normal $y_{i}\in\mathbb{R}^{3}$. The covariance structure is exchangeable with diagonal one and off diagonal $\rho=0.5$. Separate regression models are specified for each component of $y_{i}$. The mean of the first, second, and third components of the outcome depends on a design matrix with an intercept and two, three, or four independent, standard normal covariates, respectively. 
 
 
 ```r
