@@ -51,11 +51,11 @@ x_{ik}'\beta_{k}
 \right)
 $$
 
-Suppose $\beta_{j}$ is the covariate of interest. Partition $\beta_{j}=(\beta_{1,j},\beta_{2,j})$. Consider the hypothesis $\beta_{1,j} = \beta_{1,j}^{*}$. Let $\eta_{1,j}$ denote the collected nuisance regression parameters. The score test of $H_{0}:\beta_{1,j} = \beta_{1,j}^{*}$ takes the form:
+Suppose $\beta_{j}$ is the covariate of interest. Partition $\beta_{j}=(\beta_{1,j},\beta_{2,j})$. Consider the hypothesis $\beta_{1,j} = \beta_{1,j}^{\dagger}$. Let $\eta_{1,j}$ denote the collected nuisance regression parameters. The score test of $H_{0}:\beta_{1,j} = \beta_{1,j}^{\dagger}$ takes the form:
 
 $$
-T_{S} = U_{\beta_{1,j}}(\beta_{1,j}^{*},\tilde{\eta}_{1,j})'I_{\beta_{1,j}\beta_{1,j}\big|\eta_{1,j}}^{-1}
-U_{\beta_{1,j}}(\beta_{1,j}^{*},\tilde{\eta}_{1,j})
+T_{S} = U_{\beta_{1,j}}(\beta_{1,j}^{\dagger},\tilde{\eta}_{1,j})'I_{\beta_{1,j}\beta_{1,j}\big|\eta_{1,j}}^{-1}
+U_{\beta_{1,j}}(\beta_{1,j}^{\dagger},\tilde{\eta}_{1,j})
 $$
 
 # Example Data
