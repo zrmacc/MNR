@@ -7,7 +7,6 @@
 #'
 #' @param A Numeric matrix.
 #' @return Scalar.
-#' @export  
 tr <- function(A) {
     .Call('_MNR_tr', PACKAGE = 'MNR', A)
 }
@@ -19,7 +18,6 @@ tr <- function(A) {
 #' @param A Numeric matrix.
 #' @param B Numeric matrix.
 #' @return Numeric matrix. 
-#' @export 
 MMP <- function(A, B) {
     .Call('_MNR_MMP', PACKAGE = 'MNR', A, B)
 }
@@ -31,7 +29,6 @@ MMP <- function(A, B) {
 #' @param A Numeric matrix.
 #' @param B Numeric matrix.
 #' @return Numeric matrix. 
-#' @export 
 matIP <- function(A, B) {
     .Call('_MNR_matIP', PACKAGE = 'MNR', A, B)
 }
@@ -42,7 +39,6 @@ matIP <- function(A, B) {
 #'
 #' @param A Numeric matrix.
 #' @return Numeric matrix. 
-#' @export 
 matInv <- function(A) {
     .Call('_MNR_matInv', PACKAGE = 'MNR', A)
 }
@@ -53,7 +49,6 @@ matInv <- function(A) {
 #'
 #' @param A Numeric matrix.
 #' @return Scalar. 
-#' @export 
 det <- function(A) {
     .Call('_MNR_det', PACKAGE = 'MNR', A)
 }
@@ -65,7 +60,6 @@ det <- function(A) {
 #' @param X Numeric matrix.
 #' @param Y Numeric matrix.
 #' @return Numeric matrix.
-#' @export 
 matOP <- function(X, Y) {
     .Call('_MNR_matOP', PACKAGE = 'MNR', X, Y)
 }
@@ -77,7 +71,6 @@ matOP <- function(X, Y) {
 #' @param X Numeric matrix.
 #' @param A Numeric matrix.
 #' @return Numeric matrix. 
-#' @export 
 matQF <- function(X, A) {
     .Call('_MNR_matQF', PACKAGE = 'MNR', X, A)
 }
@@ -90,7 +83,6 @@ matQF <- function(X, A) {
 #' @param Iaa Information of nuisance parameter
 #' @param Iba Cross information between target and nuisance parameters
 #' @return Numeric matrix. 
-#' @export 
 SchurC <- function(Ibb, Iaa, Iba) {
     .Call('_MNR_SchurC', PACKAGE = 'MNR', Ibb, Iaa, Iba)
 }

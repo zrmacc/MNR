@@ -7,7 +7,6 @@
 //'
 //' @param A Numeric matrix.
 //' @return Scalar.
-//' @export  
 // [[Rcpp::export]]
 SEXP tr(const Eigen::Map<Eigen::MatrixXd> A){
   const double t = A.diagonal().sum();
@@ -21,7 +20,6 @@ SEXP tr(const Eigen::Map<Eigen::MatrixXd> A){
 //' @param A Numeric matrix.
 //' @param B Numeric matrix.
 //' @return Numeric matrix. 
-//' @export 
 // [[Rcpp::export]]
 SEXP MMP(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::MatrixXd> B){
   const Eigen::MatrixXd C = A*B;
@@ -35,7 +33,6 @@ SEXP MMP(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::MatrixXd> 
 //' @param A Numeric matrix.
 //' @param B Numeric matrix.
 //' @return Numeric matrix. 
-//' @export 
 // [[Rcpp::export]]
 SEXP matIP(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::MatrixXd> B){
   const Eigen::MatrixXd AtB = (A.transpose() * B);
@@ -48,7 +45,6 @@ SEXP matIP(const Eigen::Map<Eigen::MatrixXd> A, const Eigen::Map<Eigen::MatrixXd
 //'
 //' @param A Numeric matrix.
 //' @return Numeric matrix. 
-//' @export 
 // [[Rcpp::export]]
 SEXP matInv(const Eigen::Map<Eigen::MatrixXd> A){
   const Eigen::MatrixXd Ai = A.completeOrthogonalDecomposition().pseudoInverse();
@@ -61,7 +57,6 @@ SEXP matInv(const Eigen::Map<Eigen::MatrixXd> A){
 //'
 //' @param A Numeric matrix.
 //' @return Scalar. 
-//' @export 
 // [[Rcpp::export]]
 SEXP det(const Eigen::Map<Eigen::MatrixXd> A){
   const double d = A.determinant();
@@ -75,7 +70,6 @@ SEXP det(const Eigen::Map<Eigen::MatrixXd> A){
 //' @param X Numeric matrix.
 //' @param Y Numeric matrix.
 //' @return Numeric matrix.
-//' @export 
 // [[Rcpp::export]]
 SEXP matOP(const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd> Y){
   const Eigen::MatrixXd Q = X*Y.transpose();
@@ -89,7 +83,6 @@ SEXP matOP(const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd
 //' @param X Numeric matrix.
 //' @param A Numeric matrix.
 //' @return Numeric matrix. 
-//' @export 
 // [[Rcpp::export]]
 SEXP matQF(const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd> A){
   const Eigen::MatrixXd Q = X.transpose()*A*X;
@@ -104,7 +97,6 @@ SEXP matQF(const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd
 //' @param Iaa Information of nuisance parameter
 //' @param Iba Cross information between target and nuisance parameters
 //' @return Numeric matrix. 
-//' @export 
 // [[Rcpp::export]]
 SEXP SchurC(const Eigen::Map<Eigen::MatrixXd> Ibb, const Eigen::Map<Eigen::MatrixXd> Iaa,
             const Eigen::Map<Eigen::MatrixXd> Iba){
