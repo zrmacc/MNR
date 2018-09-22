@@ -40,7 +40,8 @@ coefficient for the target outcome. Partition
 }
 \examples{
 \dontrun{
-# See rMNR or vignette for data generation
+# See `? rMNR` for data generation
+# See vignette for test description
 # Test b13 = 0, which is FALSE
 Score.mnr(Y=Y,j=1,X=X,L=c(F,F,T));
 # Test b24 = 0, which is TRUE

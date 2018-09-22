@@ -161,11 +161,13 @@ fit.mnr = function(Y,X,sig=0.05,maxit=10,eps=1e-6,report=T){
   U = Point+z*SE;
   P = 2*pnorm(q=abs(Point/SE),lower.tail=F);
   # Labeling
+  if(is.null(colnames(Y))){colnames(Y)=paste0("y",seq(1:k))};
   Lab = foreach(i=1:k,.combine=rbind) %do% {
     # Outcome
-    Outcome = rep(colnames(Y)[i],times=m[i]);
+    Outcome = rep(colnames(Y)[i],times=m[[i]]);
     # Coefficient
     Coeff = colnames(X[[i]]);
+    if(is.null(Coeff)){Coeff=paste0("x",i,seq(1:m[[i]]))};
     return(data.frame("Outcome"=Outcome,"Coeff"=Coeff));
   }
   Coeff = data.frame(Lab,"Point"=Point,"SE"=SE,"L"=L,"U"=U,"p"=P);

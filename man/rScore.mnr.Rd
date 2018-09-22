@@ -37,7 +37,8 @@ recycling the same null model for each hypothesis test.
 }
 \examples{
 \dontrun{
-# See rMNR or vignette for data generation
+# See `? rMNR` for data generation
+# See vignette for test description
 # Genotype matrix
 G = replicate(2000,rbinom(n=1000,size=2,prob=0.25));
 storage.mode(G) = "numeric";
